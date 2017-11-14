@@ -1,0 +1,10 @@
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\bin\Debug\PKC_Lab1.exe.config
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\bin\Debug\PKC_Lab1.exe
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\bin\Debug\PKC_Lab1.pdb
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\obj\Debug\PKC_Lab1.csprojResolveAssemblyReference.cache
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\obj\Debug\PKC_Lab1.Form1.resources
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\obj\Debug\PKC_Lab1.Properties.Resources.resources
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\obj\Debug\PKC_Lab1.csproj.GenerateResource.Cache
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\obj\Debug\PKC_Lab1.csproj.CoreCompileInputs.cache
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\obj\Debug\PKC_Lab1.exe
+C:\Users\Alex\Documents\Visual Studio 2017\Projects\PKC_Lab1\PKC_Lab1\obj\Debug\PKC_Lab1.pdb

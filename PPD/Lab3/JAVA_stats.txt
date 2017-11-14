@@ -1,0 +1,64 @@
+Using Java ThreadPool:
+
+	The fixed thread pool always has a specified number of threads running. If a thread is somehow terminated before it finishes its job, it is immediately replaced with another one. Tasks are submitted to the thread pool using an internal queue, which holds extra tasks when all threads are already busy.
+
+	Addition (4 threads):
+		1. 10x10 - 3 milliseconds
+		2. 100x100 - 19 milliseconds
+		3. 500x500 - 103 milliseconds
+		4. 1000x1000 - 355 milliseconds
+		5. 3000x3000 - 6746 milliseconds
+
+	Addition (1 thread):
+		1. 10x10 - 2 milliseconds
+		2. 100x100 - 19 milliseconds
+		3. 500x500 - 107 milliseconds
+		4. 1000x1000 - 316 milliseconds
+		5. 3000x3000 - 5784 milliseconds
+
+	Multiplication(4 threads):
+		1. 10x10 - 4 milliseconds
+		2. 100x100 - 33 milliseconds
+		3. 500x500 - 226 milliseconds
+		4. 1000x1000 - 2741 milliseconds
+		5. 3000x3000 - 128028 milliseconds
+
+	Multiplication(1 thread):
+		1. 10x10 - 4 milliseconds
+		2. 100x100 - 29 milliseconds
+		3. 500x500 - 500 milliseconds
+		4. 1000x1000 - 4041 milliseconds
+		5. 3000x3000 - 237318 milliseconds
+
+
+Using Java Future:
+
+	A future is the result of an asynchronous operation and it contains methods to check wether the computation is complete, to wait for the completion and to retrieve its result. 
+	
+	Addition (4 threads):
+		1. 10x10 - 5 milliseconds
+		2. 100x100 - 42 milliseconds
+		3. 500x500 - 156 milliseconds
+		4. 1000x1000 - 412 milliseconds
+		5. 3000x3000 - 7366 milliseconds
+
+	Addition (1 thread):
+		1. 10x10 - 5 milliseconds
+		2. 100x100 - 52 milliseconds
+		3. 500x500 - 132 milliseconds
+		4. 1000x1000 - 456 milliseconds
+		5. 3000x3000 - 7019 milliseconds
+
+	Multiplication(4 threads):
+		1. 10x10 - 6 milliseconds
+		2. 100x100 - 55 milliseconds
+		3. 500x500 - 888 milliseconds
+		4. 1000x1000 - 7121 milliseconds
+		5. 3000x3000 - 196469 milliseconds
+
+	Multiplication(1 thread):
+		1. 10x10 - 5 milliseconds
+		2. 100x100 - 44 milliseconds
+		3. 500x500 - 2711 milliseconds
+		4. 1000x1000 - 16637 milliseconds
+		5. 3000x3000 - 552206 milliseconds

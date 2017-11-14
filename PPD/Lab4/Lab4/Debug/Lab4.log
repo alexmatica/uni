@@ -1,0 +1,4 @@
+﻿  Lab4.cpp
+d:\ubb\an 3 semestrul 1\prog paralela si distribuita\lab4\lab4\lab4.cpp(30): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Lab4.vcxproj -> D:\ubb\An 3 Semestrul 1\Prog Paralela si Distribuita\Lab4\Debug\Lab4.exe
+  Lab4.vcxproj -> D:\ubb\An 3 Semestrul 1\Prog Paralela si Distribuita\Lab4\Debug\Lab4.pdb (Partial PDB)

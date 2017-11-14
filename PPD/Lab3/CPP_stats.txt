@@ -1,0 +1,68 @@
+The std::async template function runs a given functionality asynchronously and returns an std::future which will eventually hold the result of the functionality.
+
+Some tests were performed in order to see the difference between running matrix multiplication and matrix sum on one thread and running them on several threads (4 in our case) using std::async and getting the results through std::future.
+
+Hardware info:
+	Processor: Intel i7-6600U @ 2.60GHz
+	Memory: 16GB DD4
+
+1. 10x10 matrices:
+
+------Addition:------
+Adding two 10 by 10 matrices on one thread took 0 milliseconds
+Adding two 10 by 10 matrices on 4 threads took 0 milliseconds
+
+------Multiplication:------
+Multiplying a 10 by 10 with a 10 by 10 matrices on one thread took 0 millseconds
+Multiplying a 10 by 10 with a 10 by 10 matrices on 4 threads took 0 milliseconds
+
+
+
+2. 100x100 matrices:
+
+------Addition:------
+Adding two 100 by 100 matrices on one thread took 0 milliseconds
+Adding two 100 by 100 matrices on 4 threads took 0 milliseconds
+
+------Multiplication:------
+Multiplying a 100 by 100 with a 100 by 100 matrices on one thread took 0 millseconds
+Multiplying a 100 by 100 with a 100 by 100 matrices on 4 threads took 0 milliseconds
+
+
+
+3. 500x500 matrices:
+
+Adding two 500 by 500 matrices on one thread took 0 milliseconds
+Adding two 500 by 500 matrices on 4 threads took 0 milliseconds
+
+------Multiplication:------
+Multiplying a 500 by 500 with a 500 by 500 matrices on one thread took 76 millseconds
+Multiplying a 500 by 500 with a 500 by 500 matrices on 4 threads took 44 milliseconds
+
+
+
+4. 1000x1000 matrices:
+
+------Addition:------
+Adding two 1000 by 1000 matrices on one thread took 1 milliseconds
+Adding two 1000 by 1000 matrices on 4 threads took 1 milliseconds
+
+------Multiplication:------
+Multiplying a 1000 by 1000 with a 1000 by 1000 matrices on one thread took 842 millseconds
+Multiplying a 1000 by 1000 with a 1000 by 1000 matrices on 4 threads took 1816 milliseconds
+
+
+
+5. 3000x3000 matrices:
+
+------Addition:------
+Adding two 3000 by 3000 matrices on one thread took 11 milliseconds
+Adding two 3000 by 3000 matrices on 4 threads took 7 milliseconds
+
+------Multiplication:------
+Multiplying a 3000 by 3000 with a 3000 by 3000 matrices on one thread took 136397 millseconds
+Multiplying a 3000 by 3000 with a 3000 by 3000 matrices on 4 threads took 67399 milliseconds
+
+
+
+We can see that the 4 threads start to pay off only when the input data gets large enough.

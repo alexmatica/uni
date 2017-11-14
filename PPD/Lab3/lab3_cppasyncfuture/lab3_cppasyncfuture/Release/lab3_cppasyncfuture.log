@@ -1,0 +1,9 @@
+﻿  lab3cppasyncfuture.cpp
+lab3cppasyncfuture.cpp(25): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Generating code
+  8 of 980 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  lab3_cppasyncfuture.vcxproj -> D:\ubb\An 3 Semestrul 1\Prog Paralela si Distribuita\lab3\lab3_cppasyncfuture\Release\lab3_cppasyncfuture.exe
+  lab3_cppasyncfuture.vcxproj -> D:\ubb\An 3 Semestrul 1\Prog Paralela si Distribuita\lab3\lab3_cppasyncfuture\Release\lab3_cppasyncfuture.pdb (Full PDB)

@@ -1,0 +1,12 @@
+VAR area, perimeter, radius, pi: REAL;
+plm, plt, pls : INTEGER;
+BEGIN
+	READ (2radius);
+	pi := 3.14;
+	perimeter := 2 * pi;
+	perimeter := perimeter * radius    ;
+	area := pi * radius;
+	area := area * radius;
+	WRITE(perimeter);
+	WRITE(area);
+END.

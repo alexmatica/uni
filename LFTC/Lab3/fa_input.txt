@@ -1,0 +1,5 @@
+I = q0
+F = q2
+Q = q0, q1, q2
+A = a, b
+T = q0~b~q0, q0~a~q1, q1~b~q2, q2~a~q2

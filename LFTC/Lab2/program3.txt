@@ -1,0 +1,14 @@
+VAR n, i:INTEGER;
+x,s: REAL;
+BEGIN
+	READ(n);
+	i := 0;
+	s := 0.0;
+	WHILE i < n DO
+		BEGIN
+			READ(x);
+			s := s + x;
+			i := i + 1;
+		END;
+	WRITE(s);
+END.

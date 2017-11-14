@@ -1,0 +1,65 @@
+www.cs.ubbcluj.ro/~rlupsa/edu/pdp
+
+-concurent
+-parallel
+-distributed
+
+
+transfer(a, b, amount)
+sum()
+
+transfer(int *a, int *b, int amount){
+	(*a) -= amount
+	(*b) += amount
+}
+
+
+struct Account {
+	int balance;
+	mutex mtx;
+}
+
+1.
+
+	a->mtx.lock()
+	a->balance -= amount
+	a->mtx.unclock()
+	b->mtx.lock()
+	b->balance += amount
+	b->mutex.unlock()
+
+
+
+2.
+
+	a->mtx.lock()
+	b->mtx.lock()
+	a->balance -= amount
+	b->balance += amount
+	a->mtx.unlock()
+	b->mtx.unlock()
+
+
+transfer(c,d,...)
+transfer(d,c,...)   ===> deadlock
+
+a->mtx.lock()
+while (! b->mtx.is_free()){
+	a->mtx.unlock();
+	sleep();
+	a->mtx.lock();
+}
+b->mtx.lock()			===> no bueno; somebody can get between the condition checking and the actual locking
+
+
+a->mtx.lock()
+while (! b->mtx.trylock()){
+	a->mtx.unlock();
+	sleep();
+	a->mtx.lock();
+}
+b->mtx.lock()
+
+
+
+

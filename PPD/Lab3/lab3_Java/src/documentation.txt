@@ -1,0 +1,17 @@
+//multiplication
+10x10 matrix 1 thread -> 0.006s
+10x10 matrix 10 threads ->0.005s
+100x100 matrix 10 threads ->0.101s
+100x100 matrix 50 threads ->0.057s
+100x100 matrix 100 threads ->0.054s
+1000x1000 matrix 100 threads ->2.625s
+1000x1000 matrix 1000 threads ->2.889s
+
+//sum
+10x10 matrix 1 thread -> 0.004s
+10x10 matrix 10 threads ->0.005s
+100x100 matrix 10 threads ->0.009s
+100x100 matrix 50 threads ->0.011s
+100x100 matrix 100 threads ->0.014s
+1000x1000 matrix 100 threads -> 0.16s
+1000x1000 matrix 1000 threads ->1.238s

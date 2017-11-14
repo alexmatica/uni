@@ -1,0 +1,89 @@
+<program> ::= "VAR" <declarationlist> ";" <compoundstmt> "."
+<declarationlist> ::= <declaration> | <declaration> <declarationlist>
+<declaration> ::= <identifier> {, <identifier>} ":" <type>
+<type> ::= <simpletype> | <arraytype>
+<simpletype> ::= "INTEGER" | "REAL" | "CHAR"
+<arraytype> ::= "ARRAY" "[" <number> "]" "OF" <simpletype>
+<number> ::= ["+" | "-"] <digit> {<digit>}
+<digit> ::= "0" | "1" | ... | "9"
+
+<compoundstmt> ::= "BEGIN" <stmtlist> "END"
+<stmtlist> ::= <stmt> ";" | <stmt> ";" <stmtlist>
+<stmt> ::= <assignstmt> | <iostmt> | <ifstmt> | <whilestmt> | <compoundstmt>
+
+<assignstmt> ::= <identifier> ":=" <expr>
+<expr> ::= <term> | <expr> <operator> <term>
+<term> ::= <identifier> | <constant>
+<operator> ::= "+" | "-" | "\" | "*" | "%"
+<identifier> ::= <letter> {<letter> | <digit>}
+<letter> ::= "_" | "A" | "B" | ... | "Z" | "a" | "b " | ... | "z"
+<constant> ::= <number> | <real number> 
+<real number> ::= ["-" | "+"] <floating point number>
+<floating point number> ::= <number> "." [<number>]
+
+<iostmt> ::= "READ" "(" <identifier> ")" | "WRITE" "(" <identifier> ")" | "WRITE" "(" <constant> ")"
+
+<ifstmt> ::= "IF" <condition> "THEN" <stmt> "ELSE" <stmt>
+<condition> ::= <expr> <relation> <expr>
+<relation> ::= "<" | "<=" | ">" | ">=" | "==" | "!="
+
+<whilestmt> ::= "WHILE" <condition> "DO" <stmt>
+
+
+Examples of programs
+
+1. Area and perimeter of a circle with a given radius
+
+	VAR area, perimeter, radius, pi: REAL;
+	BEGIN
+		READ(radius);
+		pi := 3.14;
+		perimeter := 2 * pi;
+		perimeter := perimeter * radius;
+		area := pi * r;
+		area := area * r;
+		WRITE(perimeter);
+		WRITE(area);
+	END.
+
+2. Greatest common divisor of 2 natural numbers
+
+	VAR a, b, r: INTEGER;
+	BEGIN
+		READ(a);
+		READ(b);
+		IF a < 0 THEN
+			WRITE(-1);
+		ELSE
+			IF b < 0 THEN
+				WRITE(-1)
+			ELSE
+				WHILE b > 0 DO
+					BEGIN
+						r := a % b;
+						a := b;
+						b := r;
+					END;
+				WRITE(a);
+	END.
+
+
+3. Sum of n real numbers
+
+	VAR n, i: INTEGER;
+	VAR x,s: REAL;
+	BEGIN
+		READ(n);
+		i := 0;
+		s := 0.0;
+		WHILE i < n DO
+			BEGIN
+				READ(x);
+				s := s + x;
+				i := i + 1;
+			END;
+		WRITE(s);
+	END
+
+
+

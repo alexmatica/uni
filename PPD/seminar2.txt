@@ -1,0 +1,54 @@
+struct Node {
+	Value v;
+	Node *next;
+	Node *prev;
+}
+
+class List {
+	Node placeHolder;
+	mutex m;
+}
+
+class Iterator {
+	Node *c;
+	List *p;
+
+}
+
+
+insert (it, v){
+	Node *n = new Node;
+	n->v = v;
+
+	m.lock();
+	n->prev = it.c->prev
+	it.c->prev->next = n
+	n->next = it.c
+	it.c->prev = n
+	m.unlock();
+}
+
+operator++(){
+	p->m.lock();
+	c = c->next;
+	p->m.unlock();
+}
+
+____________________________________________
+
+struct Node {
+	Value v;
+	Node *next;
+	Node *prev;
+	mutex m;
+}
+
+class List {
+	Node placeHolder;
+}
+
+class Iterator {
+	Node *c;
+	List *p;
+
+}

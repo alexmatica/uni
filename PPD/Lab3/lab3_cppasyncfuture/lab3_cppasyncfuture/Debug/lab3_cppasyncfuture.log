@@ -1,0 +1,5 @@
+﻿  stdafx.cpp
+  lab3cppasyncfuture.cpp
+d:\ubb\an 3 semestrul 1\prog paralela si distribuita\lab3\lab3_cppasyncfuture\lab3_cppasyncfuture\lab3cppasyncfuture.cpp(25): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  lab3_cppasyncfuture.vcxproj -> D:\ubb\An 3 Semestrul 1\Prog Paralela si Distribuita\lab3\lab3_cppasyncfuture\Debug\lab3_cppasyncfuture.exe
+  lab3_cppasyncfuture.vcxproj -> D:\ubb\An 3 Semestrul 1\Prog Paralela si Distribuita\lab3\lab3_cppasyncfuture\Debug\lab3_cppasyncfuture.pdb (Partial PDB)
