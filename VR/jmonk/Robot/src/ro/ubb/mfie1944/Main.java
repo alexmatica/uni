@@ -1,6 +1,7 @@
 package ro.ubb.mfie1944;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
 import ro.ubb.mfie1944.state.Robot;
 
@@ -19,6 +20,7 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
        stateManager.attach(new Robot(this));
+       viewPort.setBackgroundColor(ColorRGBA.Gray);
     }
 
     @Override
