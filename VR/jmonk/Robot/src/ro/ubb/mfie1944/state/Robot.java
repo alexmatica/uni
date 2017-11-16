@@ -59,45 +59,29 @@ public class Robot extends AbstractAppState{
         super.initialize(stateManager, app);
         rootNode.attachChild(localRootNode);
         
-        Map<String, Material> materials = new HashMap<>(); 
-        materials.put("body", new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")); //BODY
-        materials.put("head", new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")); //HEAD
-        materials.put("shoulder", new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")); // SHOULDER
-        materials.put("upperArm", new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")); //UPPER ARMS
-        materials.put("elbow", new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"));    //ELBOW
-        materials.put("lowerArm", new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")); //LOWER ARMS
-        materials.put("upperLeg", new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")); //UPPER LEGS
-        materials.put("lowerLeg", new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md")); //LOWER LEGS
-        
+        Material bodyMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Material headMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Material jointsMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Material limbsMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"); 
         Texture bodyTexture = assetManager.loadTexture("Interface/Logo/Monkey.jpg");
-        materials.get("body").setTexture("ColorMap", bodyTexture);
-        materials.get("head").setColor("Color", ColorRGBA.Pink);
-        materials.get("shoulder").setColor("Color", ColorRGBA.Green);
-        materials.get("upperArm").setColor("Color", ColorRGBA.DarkGray);
-        materials.get("elbow").setColor("Color", ColorRGBA.Green);
-        materials.get("lowerArm").setColor("Color", ColorRGBA.DarkGray);
-        materials.get("upperLeg").setColor("Color", ColorRGBA.DarkGray);
-        materials.get("lowerLeg").setColor("Color", ColorRGBA.DarkGray);
-        
+        bodyMat.setTexture("ColorMap", bodyTexture);
+        headMat.setColor("Color", ColorRGBA.Pink);
+        jointsMat.setColor("Color", ColorRGBA.Green);
+        limbsMat.setColor("Color", ColorRGBA.DarkGray);
         
         Box body = new Box(0.7f,0.9f,0.3f);
         Geometry bodyGeometry = new Geometry("Box", body);
-        bodyGeometry.setLocalTranslation(new Vector3f(0,0,0));
-        bodyGeometry.setMaterial(materials.get("body"));
+        bodyGeometry.setMaterial(bodyMat);
         
         //-------------------------------------------------------------------------> Head
         Sphere head = new Sphere(100, 100, body.zExtent * 1.25f);
         Geometry headGeometry = new Geometry("Sphere", head);
-        headGeometry.setLocalTranslation(new Vector3f(0, 0, 0));
-        headGeometry.setMaterial(materials.get("head"));
+        headGeometry.setMaterial(headMat);
         
         Node headNode = new Node("head");
-        headNode.setLocalTranslation(new Vector3f(0,head.radius,0));
+        headNode.setLocalTranslation(new Vector3f(0, body.yExtent + head.radius,0));
         headNode.attachChild(headGeometry);
         
-        Node neckNode = new Node("neck");
-        neckNode.setLocalTranslation(new Vector3f(0, body.yExtent, 0));
-        neckNode.attachChild(headNode);
         //----------------------------------------------------------------------------
         
         
@@ -105,38 +89,38 @@ public class Robot extends AbstractAppState{
         Sphere rightShoulder = new Sphere(100, 100, body.zExtent * 0.6f);
         Geometry rightShoulderGeometry = new Geometry("Sphere", rightShoulder);
                 
-        Box rightUpperArm = new Box(body.xExtent / 6, body.yExtent * 0.6f, body.zExtent * 0.75f);
-        Geometry rightUpperArmGeometry = new Geometry("Box", rightUpperArm);
+        Box rightArm = new Box(body.xExtent / 6, body.yExtent * 0.6f, body.zExtent * 0.75f);
+        Geometry rightArmGeometry = new Geometry("Box", rightArm);
                 
         Sphere rightElbow = new Sphere(100, 100, body.zExtent * 0.5f);
         Geometry rightElbowGeometry = new Geometry("Sphere", rightElbow);
                 
-        Box rightLowerArm = new Box(body.xExtent / 6, body.yExtent * 0.6f, body.zExtent * 0.75f);
-        Geometry rightLowerArmGeometry = new Geometry("Box", rightLowerArm);
+        Box rightHand = new Box(body.xExtent / 6, body.yExtent * 0.6f, body.zExtent * 0.75f);
+        Geometry rightHandGeometry = new Geometry("Box", rightHand);
                 
-        rightShoulderGeometry.setMaterial(materials.get("shoulder"));
-        rightUpperArmGeometry.setMaterial(materials.get("upperArm"));
-        rightElbowGeometry.setMaterial(materials.get("elbow"));
-        rightLowerArmGeometry.setMaterial(materials.get("lowerArm"));
+        rightShoulderGeometry.setMaterial(jointsMat);
+        rightArmGeometry.setMaterial(limbsMat);
+        rightElbowGeometry.setMaterial(jointsMat);
+        rightHandGeometry.setMaterial(limbsMat);
         
-        Node rightLowerArmNode = new Node("rightLowerArm");
-        rightLowerArmNode.setLocalTranslation(new Vector3f(0,- rightLowerArm.yExtent - rightElbow.radius/2,0));
-        rightLowerArmNode.attachChild(rightLowerArmGeometry);
+        Node rightHandNode = new Node("rightHand");
+        rightHandNode.setLocalTranslation(new Vector3f(0,- rightHand.yExtent - rightElbow.radius/2,0));
+        rightHandNode.attachChild(rightHandGeometry);
         
         rightElbowNode = new Node("rightElbow");
-        rightElbowNode.setLocalTranslation(new Vector3f(0, -rightUpperArm.yExtent, 0));
+        rightElbowNode.setLocalTranslation(new Vector3f(0, -rightArm.yExtent, 0));
         rightElbowNode.attachChild(rightElbowGeometry);
-        rightElbowNode.attachChild(rightLowerArmNode);
+        rightElbowNode.attachChild(rightHandNode);
                
-        Node rightUpperArmNode = new Node("rightUpperArm");
-        rightUpperArmNode.setLocalTranslation(new Vector3f(-0.07f, -rightUpperArm.yExtent, 0));
-        rightUpperArmNode.attachChild(rightUpperArmGeometry);
-        rightUpperArmNode.attachChild(rightElbowNode);
+        Node rightArmNode = new Node("rightArm");
+        rightArmNode.setLocalTranslation(new Vector3f(-0.07f, -rightArm.yExtent, 0));
+        rightArmNode.attachChild(rightArmGeometry);
+        rightArmNode.attachChild(rightElbowNode);
         
         rightShoulderNode = new Node("rightShoulder");
-        rightShoulderNode.setLocalTranslation(new Vector3f(- body.xExtent - rightUpperArm.xExtent / 2, body.yExtent - 0.1f, 0));
+        rightShoulderNode.setLocalTranslation(new Vector3f(- body.xExtent - rightArm.xExtent / 2, body.yExtent - 0.1f, 0));
         rightShoulderNode.attachChild(rightShoulderGeometry);
-        rightShoulderNode.attachChild(rightUpperArmNode);
+        rightShoulderNode.attachChild(rightArmNode);
         //-------------------------------------------------------------------------------------------------
         
         
@@ -145,113 +129,113 @@ public class Robot extends AbstractAppState{
         Sphere leftShoulder = new Sphere(100, 100, body.zExtent * 0.6f);
         Geometry leftShoulderGeometry = new Geometry("Sphere", leftShoulder);
         
-        Box leftUpperArm = new Box(body.xExtent / 6, body.yExtent * 0.6f, body.zExtent * 0.75f);
-        Geometry leftUpperArmGeometry = new Geometry("Box", leftUpperArm);
+        Box leftArm = new Box(body.xExtent / 6, body.yExtent * 0.6f, body.zExtent * 0.75f);
+        Geometry leftArmGeometry = new Geometry("Box", leftArm);
         
         Sphere leftElbow = new Sphere(100, 100, body.zExtent * 0.5f);
         Geometry leftElbowGeometry = new Geometry("Sphere", leftElbow);
         
-        Box leftLowerArm = new Box(body.xExtent / 6, body.yExtent * 0.6f, body.zExtent * 0.75f);
-        Geometry leftLowerArmGeometry = new Geometry("Box", leftLowerArm);
+        Box leftHand = new Box(body.xExtent / 6, body.yExtent * 0.6f, body.zExtent * 0.75f);
+        Geometry leftHandGeometry = new Geometry("Box", leftHand);
         
-        leftShoulderGeometry.setMaterial(materials.get("shoulder"));
-        leftUpperArmGeometry.setMaterial(materials.get("upperArm"));
-        leftElbowGeometry.setMaterial(materials.get("elbow"));
-        leftLowerArmGeometry.setMaterial(materials.get("lowerArm"));
+        leftShoulderGeometry.setMaterial(jointsMat);
+        leftArmGeometry.setMaterial(limbsMat);
+        leftElbowGeometry.setMaterial(jointsMat);
+        leftHandGeometry.setMaterial(limbsMat);
         
-        Node leftLowerArmNode = new Node("leftLowerArm");
-        leftLowerArmNode.setLocalTranslation(new Vector3f(0, -leftLowerArm.yExtent - leftElbow.radius / 2, 0));
-        leftLowerArmNode.attachChild(leftLowerArmGeometry);
+        Node leftHandNode = new Node("leftHand");
+        leftHandNode.setLocalTranslation(new Vector3f(0, -leftHand.yExtent - leftElbow.radius / 2, 0));
+        leftHandNode.attachChild(leftHandGeometry);
         
         leftElbowNode = new Node("leftElbow");
-        leftElbowNode.setLocalTranslation(new Vector3f(0, -leftUpperArm.yExtent, 0));
+        leftElbowNode.setLocalTranslation(new Vector3f(0, -leftArm.yExtent, 0));
         leftElbowNode.attachChild(leftElbowGeometry);
-        leftElbowNode.attachChild(leftLowerArmNode);
+        leftElbowNode.attachChild(leftHandNode);
         
-        Node leftUpperArmNode = new Node("leftUpperArm");
-        leftUpperArmNode.setLocalTranslation(new Vector3f(0.07f, -leftUpperArm.yExtent, 0));
-        leftUpperArmNode.attachChild(leftUpperArmGeometry);
-        leftUpperArmNode.attachChild(leftElbowNode);
+        Node leftArmNode = new Node("leftArm");
+        leftArmNode.setLocalTranslation(new Vector3f(0.07f, -leftArm.yExtent, 0));
+        leftArmNode.attachChild(leftArmGeometry);
+        leftArmNode.attachChild(leftElbowNode);
         
         leftShoulderNode = new Node("leftShoulder");
-        leftShoulderNode.setLocalTranslation(new Vector3f(body.xExtent + leftUpperArm.xExtent / 2, body.yExtent - 0.1f, 0));
+        leftShoulderNode.setLocalTranslation(new Vector3f(body.xExtent + leftArm.xExtent / 2, body.yExtent - 0.1f, 0));
         leftShoulderNode.attachChild(leftShoulderGeometry);
-        leftShoulderNode.attachChild(leftUpperArmNode);
+        leftShoulderNode.attachChild(leftArmNode);
         //------------------------------------------------------------------------------------------
 
 
 
         //------------------------------------------------------------------------------------> Right leg
-        Box rightUpperLeg = new Box(body.xExtent / 6, body.yExtent * 0.8f, body.zExtent * 0.75f);
-        Geometry rightUpperLegGeometry = new Geometry("Box", rightUpperLeg);
+        Box rightThigh = new Box(body.xExtent / 6, body.yExtent * 0.8f, body.zExtent * 0.75f);
+        Geometry rightThighGeometry = new Geometry("Box", rightThigh);
         
-        Sphere rightKnee = new Sphere(100, 100, rightUpperLeg.zExtent * 0.7f);
+        Sphere rightKnee = new Sphere(100, 100, rightThigh.zExtent * 0.7f);
         Geometry rightKneeGeometry = new Geometry("Sphere", rightKnee);
         
-        Box rightLowerLeg = new Box(body.xExtent / 6, body.yExtent * 0.9f, body.zExtent * 0.75f);
-        Geometry rightLowerLegGeometry = new Geometry("Box", rightLowerLeg);
+        Box rightTibia = new Box(body.xExtent / 6, body.yExtent * 0.9f, body.zExtent * 0.75f);
+        Geometry rightTibiaGeometry = new Geometry("Box", rightTibia);
         
-        rightUpperLegGeometry.setMaterial(materials.get("upperLeg"));
-        rightKneeGeometry.setMaterial(materials.get("elbow"));
-        rightLowerLegGeometry.setMaterial(materials.get("lowerLeg"));
+        rightThighGeometry.setMaterial(limbsMat);
+        rightKneeGeometry.setMaterial(jointsMat);
+        rightTibiaGeometry.setMaterial(limbsMat);
         
-        Node rightLowerLegNode = new Node("rightLowerLeg");
-        rightLowerLegNode.setLocalTranslation(new Vector3f(0, -rightLowerLeg.yExtent, 0));
-        rightLowerLegNode.attachChild(rightLowerLegGeometry);
+        Node rightTibiaNode = new Node("rightTibia");
+        rightTibiaNode.setLocalTranslation(new Vector3f(0, -rightTibia.yExtent, 0));
+        rightTibiaNode.attachChild(rightTibiaGeometry);
         
         rightKneeNode = new Node("rightKnee");
-        rightKneeNode.setLocalTranslation(new Vector3f(0, -rightUpperLeg.yExtent - rightKnee.radius / 2, 0));
+        rightKneeNode.setLocalTranslation(new Vector3f(0, -rightThigh.yExtent - rightKnee.radius / 2, 0));
         rightKneeNode.attachChild(rightKneeGeometry);
-        rightKneeNode.attachChild(rightLowerLegNode);
+        rightKneeNode.attachChild(rightTibiaNode);
         
-        Node rightUpperLegNode = new Node("rightUpperLeg");
-        rightUpperLegNode.setLocalTranslation(new Vector3f(0, -rightUpperLeg.yExtent, 0));
-        rightUpperLegNode.attachChild(rightKneeNode);
-        rightUpperLegNode.attachChild(rightUpperLegGeometry);
+        Node rightThighNode = new Node("rightThigh");
+        rightThighNode.setLocalTranslation(new Vector3f(0, -rightThigh.yExtent, 0));
+        rightThighNode.attachChild(rightKneeNode);
+        rightThighNode.attachChild(rightThighGeometry);
         
         rightJoint = new Node("rightJoint");
-        rightJoint.setLocalTranslation(new Vector3f(-body.xExtent + rightUpperLeg.xExtent * 3, -body.yExtent, 0));
-        rightJoint.attachChild(rightUpperLegNode);
+        rightJoint.setLocalTranslation(new Vector3f(-body.xExtent + rightThigh.xExtent * 3, -body.yExtent, 0));
+        rightJoint.attachChild(rightThighNode);
         //------------------------------------------------------------------------------------------
         
         
         
         //----------------------------------------------------------------------------------> Left leg 
-        Box leftUpperLeg = new Box(body.xExtent / 6, body.yExtent * 0.8f, body.zExtent * 0.75f);
-        Geometry leftUpperLegGeometry = new Geometry("Box", leftUpperLeg);
+        Box leftThigh = new Box(body.xExtent / 6, body.yExtent * 0.8f, body.zExtent * 0.75f);
+        Geometry leftThighGeometry = new Geometry("Box", leftThigh);
         
-        Sphere leftKnee = new Sphere(100, 100, leftUpperLeg.zExtent * 0.7f);
+        Sphere leftKnee = new Sphere(100, 100, leftThigh.zExtent * 0.7f);
         Geometry leftKneeGeometry = new Geometry("Sphere", leftKnee);
         
-        Box leftLowerLeg = new Box(body.xExtent / 6, body.yExtent * 0.9f, body.zExtent * 0.75f);
-        Geometry leftLowerLegGeometry = new Geometry("Box", leftLowerLeg);
+        Box leftTibia = new Box(body.xExtent / 6, body.yExtent * 0.9f, body.zExtent * 0.75f);
+        Geometry leftTibiaGeometry = new Geometry("Box", leftTibia);
         
-        leftUpperLegGeometry.setMaterial(materials.get("upperLeg")); 
-        leftKneeGeometry.setMaterial(materials.get("elbow"));
-        leftLowerLegGeometry.setMaterial(materials.get("lowerLeg"));
+        leftThighGeometry.setMaterial(limbsMat); 
+        leftKneeGeometry.setMaterial(jointsMat);
+        leftTibiaGeometry.setMaterial(limbsMat);
        
-        Node leftLowerLegNode = new Node("leftLowerLeg");
-        leftLowerLegNode.setLocalTranslation(new Vector3f(0, -leftLowerLeg.yExtent, 0));
-        leftLowerLegNode.attachChild(leftLowerLegGeometry);
+        Node leftTibiaNode = new Node("leftTibia");
+        leftTibiaNode.setLocalTranslation(new Vector3f(0, -leftTibia.yExtent, 0));
+        leftTibiaNode.attachChild(leftTibiaGeometry);
         
         leftKneeNode = new Node("leftKnee");
-        leftKneeNode.setLocalTranslation(new Vector3f(0, -leftUpperLeg.yExtent - leftKnee.radius / 2, 0));
+        leftKneeNode.setLocalTranslation(new Vector3f(0, -leftThigh.yExtent - leftKnee.radius / 2, 0));
         leftKneeNode.attachChild(leftKneeGeometry);
-        leftKneeNode.attachChild(leftLowerLegNode);
+        leftKneeNode.attachChild(leftTibiaNode);
         
-        Node leftUpperLegNode = new Node("leftUpperLeg");
-        leftUpperLegNode.setLocalTranslation(new Vector3f(0, -leftUpperLeg.yExtent, 0));
-        leftUpperLegNode.attachChild(leftKneeNode);
-        leftUpperLegNode.attachChild(leftUpperLegGeometry);
+        Node leftThighNode = new Node("leftThigh");
+        leftThighNode.setLocalTranslation(new Vector3f(0, -leftThigh.yExtent, 0));
+        leftThighNode.attachChild(leftKneeNode);
+        leftThighNode.attachChild(leftThighGeometry);
         
         leftJoint = new Node("leftJoint");
-        leftJoint.setLocalTranslation(new Vector3f(body.xExtent - leftUpperLeg.xExtent * 3, -body.yExtent, 0));
-        leftJoint.attachChild(leftUpperLegNode);
+        leftJoint.setLocalTranslation(new Vector3f(body.xExtent - leftThigh.xExtent * 3, -body.yExtent, 0));
+        leftJoint.attachChild(leftThighNode);
         
         //----------------------------------------------------------------------> Body
         bodyNode = new Node("body");
         bodyNode.attachChild(bodyGeometry);
-        bodyNode.attachChild(neckNode);
+        bodyNode.attachChild(headNode);
         bodyNode.attachChild(leftShoulderNode);
         bodyNode.attachChild(rightShoulderNode);
         bodyNode.attachChild(leftJoint);
@@ -273,9 +257,11 @@ public class Robot extends AbstractAppState{
         inputManager.addMapping("RightED", new KeyTrigger(KeyInput.KEY_0));
         inputManager.addMapping("Legs", new KeyTrigger(KeyInput.KEY_G));
         inputManager.addMapping("LegsB", new KeyTrigger(KeyInput.KEY_H));
+        inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("JumpB", new KeyTrigger(KeyInput.KEY_Y));
         inputManager.addMapping("Body", new KeyTrigger(KeyInput.KEY_B));
         inputManager.addListener(analogListener, "LeftS", "RightS", "LeftE", "RightE",
-                "LeftSD", "RightSD", "LeftED", "RightED", "Legs", "LegsB", "Body");
+                "LeftSD", "RightSD", "LeftED", "RightED", "Legs", "LegsB", "Body", "Jump", "JumpB");
     }
     
     private final AnalogListener analogListener = new AnalogListener(){
@@ -320,6 +306,19 @@ public class Robot extends AbstractAppState{
                 leftKneeNode.rotate(0, 0, 3f * tpf);
                 rightJoint.rotate(0, 0, 3f * tpf);
                 rightKneeNode.rotate(0, 0, -3f * tpf);
+            }
+            
+            if (name.equals("Jump")){
+                leftJoint.rotate(-3f * tpf, 0, 0);
+                leftKneeNode.rotate(3f * tpf, 0, 0);
+                rightJoint.rotate(-3f * tpf, 0 ,0);
+                rightKneeNode.rotate(3f * tpf, 0 ,0);
+            }
+            else if (name.equals("JumpB")){
+                leftJoint.rotate(3f * tpf, 0, 0);
+                leftKneeNode.rotate(-3f * tpf, 0, 0);
+                rightJoint.rotate(3f * tpf, 0 ,0);
+                rightKneeNode.rotate(-3f * tpf, 0 ,0);
             }
             
             if (name.equals("Body")){
