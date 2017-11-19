@@ -1,0 +1,18 @@
+VAR _a, b, r: INTEGER;
+	BEGIN
+		READ(a2);
+		READ(b3);
+		IF a < 0 THEN
+			WRITE(-1);
+		ELSE
+			IF b < 0 THEN
+				WRITE(-0.123121231111);
+			ELSE
+				WHILE b != 0 DO
+					BEGIN
+						r := a MOD b   ;
+						a := b;
+						b := r;
+					END;
+				WRITE(a);
+	END.
