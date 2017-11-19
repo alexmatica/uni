@@ -1,38 +1,13 @@
-"""
-	MATICA Florian-Alexandru
-	Group 935
+#
+# 	MATICA Florian-Alexandru
+# 	Group 935
+#
+# 	Syntax parser for a Pascal-like mini-language
+#
 
-	Syntax parser for a Pascal-like mini-language
-"""
-
-import re, sys, os
+import sys, os
 from time import gmtime, strftime
 from fa import Automata
-
-'''
-	The following are different regular expressions used to identify the following:
-		-identifiers
-		-constants
-		-reserved literals, operators ("(", ")", "+", "-", ">", "<", etc...)
-'''
-identifierReString = r'([a-zA-Z]+[0-9]*|_+[a-zA-Z0-9_]+)'
-numberReString = r'([-+]?[1-9][0-9]*(?:\.[0-9]*)?|[+-]?0\.[0-9]*|0)'
-openBracket = r'[\s]*(\()[\s]*'
-closedBracket = r'[\s]*(\))[\s]*'
-typesString = r'(INTEGER|REAL)'
-rxReadWrite = re.compile(
-    r'[\s]*(READ|WRITE)' + openBracket + r'(?:' + identifierReString + r'|' + numberReString + r')' + closedBracket + '(;)')
-rxDeclaration = re.compile(r'([a-zA-Z0-9\s,_]+)(:)[\s]*(REAL|INTEGER)[\s]*(;)')
-rxBeginEnd = re.compile(r'(BEGIN|END)', re.I)
-rxComparator = re.compile(r'(<=|>=|<|>|=|!=)')
-rxOperator = re.compile(r'[\+\-\/\*]|MOD')
-rxNumber = re.compile(numberReString)
-rxIdentifier = re.compile(identifierReString)
-rxIf = re.compile(r'[\s]*(IF).{3,}(THEN)[\s]*')
-rxWhile = re.compile(r'[\s]*(WHILE).{3,}(DO)[\s]*')
-rxInsideEnd = re.compile(r'[\s]*END[\s]*;[\s]*')
-rxSyntErr = re.compile(r'[^a-zA-Z0-9_.]')
-
 
 class Atom:
     def __init__(self, key, value, extra=None):
@@ -205,7 +180,7 @@ class Program:
                 if ',' in line:
                     self.Log('Found declarations line: %s' % line)
                     self.parseDeclarations(line)
-                elif 'READ' in line or 'WRITE' in line:
+                elif line.startswith('READ') or line.startswith('WRITE'):
                     self.Log('Found READ/WRITE line: %s' % line)
                     self.parseReadWrite(line)
                 elif line == 'BEGIN':
@@ -224,7 +199,7 @@ class Program:
                 elif ':=' in line:
                     self.Log('Found assignment line: %s' % line)
                     self.parseAssign(line)
-                elif rxIf.match(line):
+                elif line.startswith('IF') and line.endswith('THEN'):
                     self.Log('Found if stmt line: %s' % line)
                     self.parseIf(line)
                     ifs += 1
@@ -234,7 +209,7 @@ class Program:
                         print 'Error at line %d. No IF to match the current ELSE!' % self.lineCount
                         sys.exit(0)
                     self.PIF.append(Atom(self.atoms['ELSE'], '-', 'ELSE'))
-                elif rxWhile.match(line):
+                elif line.startswith('WHILE') and line.endswith('DO'):
                     self.parseWhile(line)
                 else:
                     print 'Error at line %d. Unmatched syntax [%s].' % (self.lineCount, line)
@@ -343,11 +318,9 @@ class Program:
             identMatch = self.fa_id.verifySequence(t)[0]
             numMatch = self.fa_const.verifySequence(t)[0]
             if identMatch:
-                # print 'match ident', t
                 if len(t) > 255:
                     print 'Error at line %d. Identifier length exceeds 255 (%d)' % (self.lineCount, len(t))
                     sys.exit(0)
-                # print 'matchuit ', t
                 n = CustomNode(t, self.symTableAddress)
                 nFind = self.symTable.findNode(n)
                 if nFind is None:
@@ -355,7 +328,6 @@ class Program:
                     self.symTable.addNode(n)
                 self.PIF.append(Atom(self.atoms['ID'], n.code, t))
             elif numMatch:
-                print 'match number', t
                 n = CustomNode(t, self.symTableAddress)
                 nFind = self.symTable.findNode(n)
                 if nFind is None:
@@ -394,11 +366,17 @@ class Program:
         self.PIF.append(Atom(self.atoms['IF'], '-', 'IF'))
         line = line.replace('IF', '').strip()
         line = line.replace('THEN', '').strip()
-        try:
-            crtComparator = rxComparator.findall(line)[0].strip()
-        except:
+
+        crtComparator = None
+        for comp in {'>', '<', '>=', '<=', '<>', '=='}:
+            if comp in line:
+                crtComparator = comp
+                break
+
+        if crtComparator is None:
             print 'Error at line %d. Bad expression after IF: %s!' % (self.lineCount, line)
             sys.exit(0)
+
         leftRight = line.split(crtComparator)
         self.Log('Separated expression parts: ' + str(leftRight))
         left, right = leftRight[0], leftRight[1]
@@ -410,11 +388,17 @@ class Program:
     def parseWhile(self, line):
         self.PIF.append(Atom(self.atoms['WHILE'], '-', 'WHILE'))
         line = line.replace('WHILE', '').replace('DO', '').strip()
-        try:
-            crtComparator = rxComparator.findall(line)[0].strip()
-        except:
-            print 'Error at line %d. Bad expression after WHILE: %s!' % (self.lineCount, line)
+
+        crtComparator = None
+        for comp in {'>', '<', '>=', '<=', '<>', '=='}:
+            if comp in line:
+                crtComparator = comp
+                break
+
+        if crtComparator is None:
+            print 'Error at line %d. Bad expression after IF: %s!' % (self.lineCount, line)
             sys.exit(0)
+
         leftRight = line.split(crtComparator)
         self.Log('Separated expression parts: ' + str(leftRight))
         left, right = leftRight[0], leftRight[1]

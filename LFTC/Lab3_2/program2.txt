@@ -8,7 +8,7 @@ VAR _a, b, r: INTEGER;
 			IF b < 0 THEN
 				WRITE(-0.123121231111);
 			ELSE
-				WHILE b != 0 DO
+				WHILE b <> 0 DO
 					BEGIN
 						r := a MOD b   ;
 						a := b;
