@@ -1,0 +1,5 @@
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_EventDriven/Lab5_EventDriven/bin/Debug/Lab5_EventDriven.exe
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_EventDriven/Lab5_EventDriven/bin/Debug/Lab5_EventDriven.pdb
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_EventDriven/Lab5_EventDriven/obj/x86/Debug/Lab5_EventDriven.csproj.CoreCompileInputs.cache
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_EventDriven/Lab5_EventDriven/obj/x86/Debug/Lab5_EventDriven.exe
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_EventDriven/Lab5_EventDriven/obj/x86/Debug/Lab5_EventDriven.pdb

@@ -1,0 +1,5 @@
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrapping/Lab5_TaskWrapping/bin/Debug/Lab5_TaskWrapping.exe
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrapping/Lab5_TaskWrapping/bin/Debug/Lab5_TaskWrapping.pdb
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrapping/Lab5_TaskWrapping/obj/x86/Debug/Lab5_TaskWrapping.csproj.CoreCompileInputs.cache
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrapping/Lab5_TaskWrapping/obj/x86/Debug/Lab5_TaskWrapping.exe
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrapping/Lab5_TaskWrapping/obj/x86/Debug/Lab5_TaskWrapping.pdb

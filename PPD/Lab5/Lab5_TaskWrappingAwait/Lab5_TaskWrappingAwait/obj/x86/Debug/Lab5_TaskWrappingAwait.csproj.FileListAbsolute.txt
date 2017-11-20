@@ -1,0 +1,5 @@
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrappingAwait/Lab5_TaskWrappingAwait/bin/Debug/Lab5_TaskWrappingAwait.exe
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrappingAwait/Lab5_TaskWrappingAwait/bin/Debug/Lab5_TaskWrappingAwait.pdb
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrappingAwait/Lab5_TaskWrappingAwait/obj/x86/Debug/Lab5_TaskWrappingAwait.csproj.CoreCompileInputs.cache
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrappingAwait/Lab5_TaskWrappingAwait/obj/x86/Debug/Lab5_TaskWrappingAwait.exe
+/home/fmatica/Uni/uni/PPD/Lab5/Lab5_TaskWrappingAwait/Lab5_TaskWrappingAwait/obj/x86/Debug/Lab5_TaskWrappingAwait.pdb

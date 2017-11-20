@@ -1,0 +1,14 @@
+﻿<Properties StartupConfiguration="{0F4C6870-1A7A-4180-AF46-FE7FE73CD770}|Default">
+  <MonoDevelop.Ide.ItemProperties.Lab5__TaskWrapping PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Lab5_TaskWrapping/Program.cs">
+    <Files>
+      <File FileName="Lab5_TaskWrapping/Program.cs" Line="182" Column="31" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
