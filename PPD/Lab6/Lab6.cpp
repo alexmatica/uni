@@ -1,4 +1,4 @@
-#define N 10
+#define N 30000
 #define T 4
 #include <iostream>
 #include <stdlib.h>
@@ -13,7 +13,6 @@
 typedef std::chrono::high_resolution_clock Clock;
 
 int P1[N+1], P2[N+1], R[2*N + 1];
-int D[N+1][N+1];
 std::mutex mtx_protect[2*N + 1];
 
 unsigned values_computed = 0;
@@ -62,26 +61,25 @@ void multiplyWorker(int tid){
 }
 
 void karatsubaLinear(){
+	for(int s=0; s<=N-1; s++){ 
+		R[2*s] += P1[s] * P2[s];
+		for(int t=s+1; t<=N; t++){
+				R[s+t] += (((P1[s] + P1[t]) * (P2[s] + P2[t])) - P1[s]*P2[s] - P1[t]*P2[t]);
+		}
+	}
+	R[0] = P1[0]*P2[0];
+	R[2*N] = P1[N]*P2[N];
+}
 
-	// std::cout<<"CE???" << std::flush;
-
-	for (int i=0; i<=N; i++)
-		D[i][i] = P1[i] * P2[i];
-	// std::cout<<"G" << std::flush;
-	for(int s=0; s <= N-1; s++)
-		for(int t=s+1; t<=N; t++)
-			D[s][t] = ((P1[s] + P1[t]) * (P2[s] + P2[t]));
-	// std::cout<<"O" << std::flush;
-	for (int s=0; s<=N-1; s++)
-		for (int t=s+1; t<=N; t++)
-			R[s+t] += (D[s][t] - D[s][s] - D[t][t]);
-	// std::cout<<"GOOD TIL NOW\n" << std::flush;
-
-	for (int i=2; i <= 2*N; i+=2)
-		R[i] += (D[i/2][i/2]);
-	// std::cout<<"D\n" << std::flush;
-	R[0] = D[0][0];
-	R[2*N] = D[N][N];
+void karatsubaWorker(int tid){
+	for(int s=tid; s<=N-1; s += T){ 
+		R[2*s] += P1[s] * P2[s];
+		for(int t=s+1; t<=N; t++){
+			mtx_protect[s+t].lock();
+			R[s+t] += (((P1[s] + P1[t]) * (P2[s] + P2[t])) - P1[s]*P2[s] - P1[t]*P2[t]);
+			mtx_protect[s+t].unlock();
+		}
+	}
 }
 
 int main(int argc, char **argv)
@@ -108,14 +106,32 @@ int main(int argc, char **argv)
 	auto mt_end1 = Clock::now();
 	std::cout<< N <<" degree polynomials on one thread: ";
 	std::cout << (std::chrono::duration_cast<std::chrono::microseconds>(mt_end1 - mt_start1)).count() << " micros" << '\n';
-	printPolynom(R, 2*N);
+	// printPolynom(R, 2*N);
+
 	resetResult();
+	
 	auto mt_start2 = Clock::now();
 	karatsubaLinear();
 	auto mt_end2 = Clock::now();
 	std::cout<< N <<" degree polynomials on one thread (Karatsuba): ";
 	std::cout << (std::chrono::duration_cast<std::chrono::microseconds>(mt_end2 - mt_start2)).count() << " micros" << '\n';
-	printPolynom(R, 2*N);
+	// printPolynom(R, 2*N);
+
+	resetResult();
+	
+	std::vector<std::future<void>> karatsubaThreads;
+	auto mt_start3 = Clock::now();
+	for (int i = 0; i < T; i++) {
+		karatsubaThreads.emplace_back(std::async(karatsubaWorker, i));
+	}
+	for (auto &&res: karatsubaThreads){
+		res.get();
+	}
+	R[2*N] = P1[N]*P2[N];
+	auto mt_end3 = Clock::now();
+	std::cout<< N <<" degree polynomials on "<< T <<" threads (Karatsuba): ";
+	std::cout << (std::chrono::duration_cast<std::chrono::microseconds>(mt_end3 - mt_start3)).count() << " micros" << '\n';
+	// printPolynom(R, 2*N);
 
 	return 0;
 }
