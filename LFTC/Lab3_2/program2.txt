@@ -1,6 +1,6 @@
 VAR _a, b, r: INTEGER;
 	BEGIN
-		READ(a2);
+		READ(a);
 		READ(b3);
 		IF a < 0 THEN
 			WRITE(-1);
@@ -10,7 +10,7 @@ VAR _a, b, r: INTEGER;
 			ELSE
 				WHILE b <> 0 DO
 					BEGIN
-						r := a MOD b   ;
+						r := a MOD b  ;
 						a := b;
 						b := r;
 					END;
