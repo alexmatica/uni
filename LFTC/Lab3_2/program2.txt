@@ -2,13 +2,13 @@ VAR _a, b, r: INTEGER;
 	BEGIN
 		READ(a);
 		READ(b3);
-		IF a < 0 THEN
-			WRITE(-1);
+		IF a < %001010101 THEN
+			WRITE(&1234567);
 		ELSE
 			IF b < 0 THEN
 				WRITE(-0.123121231111);
 			ELSE
-				WHILE b <> 0 DO
+				WHILE b <> $AF DO
 					BEGIN
 						r := a MOD b  ;
 						a := b;

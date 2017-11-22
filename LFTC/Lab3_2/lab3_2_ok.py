@@ -120,6 +120,7 @@ class Program:
         self.fa_const = Automata('fa_const.txt')
         self.fa_id = Automata('fa_id.txt')
 
+        # print self.fa_const.verifySequence('-0.123121231111')
         with open(atomsFile, 'r') as f:
             for line in f:
                 atom, code = line.split(' ')
@@ -143,10 +144,11 @@ class Program:
                 # print 'This is not a keytoken:', prefix
                 self.symTableAddress += 1
                 self.symTable.addNode(n)
+                nFind = n
             if self.fa_id.verifySequence(prefix)[0]:
-                self.PIF.append(Atom(self.atoms['ID'], n.code, prefix))
+                self.PIF.append(Atom(self.atoms['ID'], nFind.code, prefix))
             else:
-                self.PIF.append(Atom(self.atoms['CONST'], n.code, prefix))
+                self.PIF.append(Atom(self.atoms['CONST'], nFind.code, prefix))
 
     def startParser(self, programFile):
         with open(programFile, 'r') as f:
@@ -165,20 +167,22 @@ class Program:
                             status, prefix = status2, prefix2
                     # print 'Crt seq:', repr(crtSeq), status, repr(prefix)
                     if not status:
-                        isUS = False
-                        isSign = False
+                        isPartOfId = False
                         if i < len(line) - 1 and line[i:i+2] in {'<=', '>=', '==', '<>'}:
                             if prefix != '':
                                 self.updatePifAndSymTable(prefix)
                             self.updatePifAndSymTable(line[i:i+2])
                             i += 2
                         elif line[i] in {' ', ';', ',', '(', ')', '<', '>', '_', '.'}:
-                            if prefix != '':
-                                self.updatePifAndSymTable(prefix)
-                            if line[i] not in {' ', '_'}:
-                                self.updatePifAndSymTable(line[i])
-                                if line[i] == '_':
-                                    isUS = True
+                            if line[i] != '.':
+                                if prefix != '':
+                                    self.updatePifAndSymTable(prefix)
+                                if line[i] not in {' ', '_'}:
+                                    self.updatePifAndSymTable(line[i])
+                                    if line[i] == '_':
+                                        isPartOfId = True
+                            else:
+                                isPartOfId = True
                             i += 1
                         elif line[i] == ':':
                             if prefix != '':
@@ -196,18 +200,21 @@ class Program:
                                 if not self.fa_id.verifySequence(line[i+1])[0] and not self.fa_const.verifySequence(line[i+1]):
                                     self.updatePifAndSymTable(line[i])
                                 else:
-                                    isSign = True
+                                    isPartOfId = True
+                            i += 1
+                        elif line[i] in {'$', '%', '&'}:
+                            isPartOfId = True
                             i += 1
                         else:
                             print 'Syntax error at line %d! Unexpected token [%s].' % (self.lineCount, line[i])
                             sys.exit(0)
 
-                        if not isUS and not isSign:
+                        if not isPartOfId:
                             lastPos = i
                     else:
                         i += 1
-                    if i == len(line) and status:
-                        self.updatePifAndSymTable(crtSeq)
+                    if i == len(line) and (status or prefix != ''):
+                        self.updatePifAndSymTable(prefix)
                 self.lineCount += 1
 
     def printPIF(self):

@@ -1,10 +1,12 @@
 I = start
-F = zerof, binf, octalf, decf, fracf, hexaf, base
-Q = start, zero, zerof, sign, base, decf, octalf, fracf, bin, binf, hexa, hexaf
-A = 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,A,B,C,D,E,F,x,X,+,-,.
+F = zerof, binf, octalf, decf, fracf, hexaf, justz
+Q = start, zero, zerof, sign, decf, octal, octalf, fracf, bin, binf, hexa, hexaf, justz
+A = 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,A,B,C,D,E,F,x,X,+,-,.,%,$,&
 
-T = start~+;-~sign, start~.~zero, start~1;2;3;4;5;6;7;8;9~decf, zero~0;1;2;3;4;5;6;7;8;9~zerof, zerof~0;1;2;3;4;5;6;7;8;9~zerof, start~0~base
-T = sign~.~zero, sign~0~base, sign~1;2;3;4;5;6;7;8;9~decf, base~0;1;2;3;4;5;6;7~octalf, base~.~fracf, base~x;X~hexa, base~b~bin
+T = start~+;-~sign, start~.~zero, start~1;2;3;4;5;6;7;8;9~decf, zero~0;1;2;3;4;5;6;7;8;9~zerof, zerof~0;1;2;3;4;5;6;7;8;9~zerof
+T = justz~.~zero
+T = sign~%~bin, sign~$~hexa, sign~&~octal, octal~0;1;2;3;4;5;6;7~octalf, start~%~bin, start~$~hexa, start~&~octal
+T = sign~1;2;3;4;5;6;7;8;9~decf, start~0~justz, sign~0~justz
 T = octalf~0;1;2;3;4;5;6;7~octalf, fracf~0;1;2;3;4;5;6;7;8;9~fracf, bin~0;1~binf, binf~0;1~binf
 T = hexa~0;1;2;3;4;5;6;7;8;9;a;b;c;d;e;f;A;B;C;D;E;F~hexaf, hexaf~0;1;2;3;4;5;6;7;8;9;a;b;c;d;e;f;A;B;C;D;E;F~hexaf
 T = decf~0;1;2;3;4;5;6;7;8;9~decf, decf~.~fracf
