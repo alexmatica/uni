@@ -1,7 +1,7 @@
 ﻿<Properties StartupConfiguration="{C0CA36C1-97E0-46C0-B373-26F11CC295EB}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="Lab5_EventDriven/Program.cs">
     <Files>
-      <File FileName="Lab5_EventDriven/Program.cs" Line="162" Column="35" />
+      <File FileName="Lab5_EventDriven/Program.cs" Line="104" Column="36" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

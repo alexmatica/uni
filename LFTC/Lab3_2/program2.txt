@@ -1,4 +1,4 @@
-VAR _a, b, r: INTEGER;
+VAR _a, b2, r: INTEGER;
 	BEGIN
 		READ(a);
 		READ(b3);

@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.ItemProperties.Lab5__TaskWrappingAwait PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Lab5_TaskWrappingAwait/Program.cs">
     <Files>
-      <File FileName="Lab5_TaskWrappingAwait/Program.cs" Line="157" Column="13" />
+      <File FileName="Lab5_TaskWrappingAwait/Program.cs" Line="55" Column="13" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/fmatica/Uni/uni/PPD/Lab7/main.cpp
+iostream
+-
+thread
+-
+future
+-
+fstream
+-
+string.h
+-
+vector
+-
+chrono
+-
+

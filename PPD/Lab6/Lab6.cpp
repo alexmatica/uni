@@ -1,4 +1,4 @@
-#define N 50000
+#define N 500
 #define T 4
 #include <iostream>
 #include <stdlib.h>

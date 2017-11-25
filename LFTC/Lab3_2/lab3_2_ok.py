@@ -151,6 +151,7 @@ class Program:
                 self.PIF.append(Atom(self.atoms['CONST'], nFind.code, prefix))
 
     def startParser(self, programFile):
+        isPartOfId = False
         with open(programFile, 'r') as f:
             for line in f:
                 line = line.strip()
@@ -167,16 +168,23 @@ class Program:
                             status, prefix = status2, prefix2
                     # print 'Crt seq:', repr(crtSeq), status, repr(prefix)
                     if not status:
-                        isPartOfId = False
+
                         if i < len(line) - 1 and line[i:i+2] in {'<=', '>=', '==', '<>'}:
                             if prefix != '':
                                 self.updatePifAndSymTable(prefix)
+                                isPartOfId = False
                             self.updatePifAndSymTable(line[i:i+2])
                             i += 2
                         elif line[i] in {' ', ';', ',', '(', ')', '<', '>', '_', '.'}:
                             if line[i] != '.':
                                 if prefix != '':
                                     self.updatePifAndSymTable(prefix)
+                                    isPartOfId = False
+
+                                if isPartOfId is True and line[i] != ' ':
+                                    print 'Syntax error at line [%d] - [%s]!' % (self.lineCount, line[i])
+                                    sys.exit(0)
+
                                 if line[i] not in {' ', '_'}:
                                     self.updatePifAndSymTable(line[i])
                                     if line[i] == '_':
@@ -187,6 +195,7 @@ class Program:
                         elif line[i] == ':':
                             if prefix != '':
                                 self.updatePifAndSymTable(prefix)
+                                isPartOfId = False
                             if i < len(line) - 1 and line[i+1] == '=':
                                 self.updatePifAndSymTable(':=')
                                 i += 2
@@ -196,6 +205,7 @@ class Program:
                         elif line[i] in {'+', '-', '/', '*'}:
                             if prefix != '':
                                 self.updatePifAndSymTable(prefix)
+                                isPartOfId = False
                             if line[i] in {'+', '-'}:
                                 if not self.fa_id.verifySequence(line[i+1])[0] and not self.fa_const.verifySequence(line[i+1]):
                                     self.updatePifAndSymTable(line[i])
