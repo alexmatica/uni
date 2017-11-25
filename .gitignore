@@ -1,2 +1,8 @@
 /VR/jmonk/Robot/dist/
-/.idea
+**/.idea
+**/bin
+**/obj
+**/*.o
+**/*.out
+**/Debug
+**/Release
