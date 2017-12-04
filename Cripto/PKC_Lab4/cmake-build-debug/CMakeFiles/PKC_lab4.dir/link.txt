@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/PKC_lab4.dir/main.cpp.o  -o PKC_lab4 

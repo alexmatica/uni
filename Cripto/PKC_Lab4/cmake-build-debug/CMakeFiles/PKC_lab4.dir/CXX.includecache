@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/fmatica/Uni/uni/Cripto/PKC_Lab4/main.cpp
+iostream
+-
+cmath
+-
+chrono
+-
+cstring
+-
+fstream
+-
+
