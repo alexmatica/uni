@@ -341,6 +341,9 @@ void yyfree (void *  );
 
 /* Begin user sect3 */
 
+#define yywrap() (/*CONSTCOND*/1)
+#define YY_SKIP_YYWRAP
+
 typedef unsigned char YY_CHAR;
 
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
@@ -375,8 +378,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 34
-#define YY_END_OF_BUFFER 35
+#define YY_NUM_RULES 38
+#define YY_END_OF_BUFFER 39
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -384,15 +387,16 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[71] =
+static yyconst flex_int16_t yy_accept[81] =
     {   0,
-        0,    0,   35,   33,   32,   32,    5,    6,    3,    1,
-        8,    2,    9,    4,   31,   17,    7,   13,   11,   14,
-       30,   30,   30,   30,   30,   30,   30,   30,   30,   31,
-       10,   15,   12,   16,   30,   30,   19,   30,   30,   21,
-       30,   30,   30,   30,   30,   30,   30,   30,   20,   30,
-       30,   30,   24,   30,   30,   30,   22,   30,   28,   27,
-       23,   30,   30,   18,   30,   25,   29,   30,   26,    0
+        0,    0,   39,   37,   35,   36,    5,    6,    3,    1,
+        8,    2,    9,    4,   33,   33,   17,    7,   13,   11,
+       14,   31,   31,   31,   31,   31,   31,   31,   31,   31,
+       31,   37,   33,   33,   34,   33,   10,   15,   12,   16,
+       31,   31,   19,   31,   31,   21,   31,   31,   31,   31,
+       31,   31,   31,   32,   34,   31,   31,   20,   31,   30,
+       31,   31,   24,   31,   31,   31,   22,   31,   28,   27,
+       23,   31,   31,   18,   31,   25,   29,   31,   26,    0
     } ;
 
 static yyconst YY_CHAR yy_ec[256] =
@@ -401,16 +405,16 @@ static yyconst YY_CHAR yy_ec[256] =
         1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    1,    1,    1,    1,    1,    1,    4,
-        5,    6,    7,    8,    9,   10,   11,   12,   12,   12,
-       12,   12,   12,   12,   12,   12,   12,   13,   14,   15,
-       16,   17,    1,    1,   18,   19,   20,   21,   22,   23,
-       24,   25,   26,   20,   20,   27,   20,   28,   29,   20,
-       20,   30,   31,   32,   20,   33,   34,   20,   20,   20,
-        1,    1,    1,    1,    1,    1,   20,   20,   20,   20,
+        5,    6,    7,    8,    9,   10,   11,   12,   13,   13,
+       13,   13,   13,   13,   13,   13,   13,   14,   15,   16,
+       17,   18,    1,    1,   19,   20,   21,   22,   23,   24,
+       25,   26,   27,   21,   21,   28,   29,   30,   31,   21,
+       21,   32,   33,   34,   21,   35,   36,   21,   21,   21,
+        1,    1,    1,    1,   37,    1,   21,   21,   21,   21,
 
-       20,   20,   20,   20,   20,   20,   20,   20,   20,   20,
-       20,   20,   20,   20,   20,   20,   20,   20,   20,   20,
-       20,   20,    1,    1,    1,    1,    1,    1,    1,    1,
+       21,   21,   21,   21,   21,   21,   21,   21,   21,   21,
+       21,   21,   21,   21,   21,   21,   21,   21,   21,   21,
+       21,   21,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -427,70 +431,76 @@ static yyconst YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst YY_CHAR yy_meta[35] =
+static yyconst YY_CHAR yy_meta[38] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    2,    1,    1,    1,    1,    1,    2,    2,    2,
+        1,    2,    2,    1,    1,    1,    1,    1,    2,    2,
         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2
+        2,    2,    2,    2,    2,    2,    3
     } ;
 
-static yyconst flex_uint16_t yy_base[72] =
+static yyconst flex_uint16_t yy_base[83] =
     {   0,
-        0,    0,   76,   77,   77,   77,   77,   77,   77,   77,
-       77,   77,   77,   77,   63,   58,   77,   19,   77,   57,
-        0,   50,   42,   10,   16,   48,   44,   50,   15,   55,
-       77,   77,   77,   77,    0,   42,    0,   34,   43,    0,
-       31,   44,   39,   30,   33,   32,   31,   34,    0,   33,
-       20,   26,    0,   26,   20,   23,    0,   26,    0,    0,
-        0,   27,   26,    0,   24,    0,    0,   13,    0,   77,
-       40
+        0,    0,  100,  101,  101,  101,  101,  101,  101,   26,
+      101,   28,  101,  101,   89,   32,   81,  101,   29,  101,
+       80,    0,   73,   64,   20,   19,   63,   70,   66,   72,
+       25,    0,   80,   42,   46,   50,  101,  101,  101,  101,
+        0,   64,    0,   55,   65,    0,   52,   63,   65,   60,
+       50,   54,   53,    0,   52,   52,   55,    0,   54,    0,
+       39,   46,    0,   47,   40,   43,    0,   47,    0,    0,
+        0,   48,   47,    0,   43,    0,    0,   24,    0,  101,
+       51,   66
     } ;
 
-static yyconst flex_int16_t yy_def[72] =
+static yyconst flex_int16_t yy_def[83] =
     {   0,
-       70,    1,   70,   70,   70,   70,   70,   70,   70,   70,
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       71,   71,   71,   71,   71,   71,   71,   71,   71,   70,
-       70,   70,   70,   70,   71,   71,   71,   71,   71,   71,
-       71,   71,   71,   71,   71,   71,   71,   71,   71,   71,
-       71,   71,   71,   71,   71,   71,   71,   71,   71,   71,
-       71,   71,   71,   71,   71,   71,   71,   71,   71,    0,
-       70
+       80,    1,   80,   80,   80,   80,   80,   80,   80,   80,
+       80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+       80,   81,   81,   81,   81,   81,   81,   81,   81,   81,
+       81,   82,   80,   80,   80,   80,   80,   80,   80,   80,
+       81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
+       81,   81,   81,   82,   80,   81,   81,   81,   81,   81,
+       81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
+       81,   81,   81,   81,   81,   81,   81,   81,   81,    0,
+       80,   80
     } ;
 
-static yyconst flex_uint16_t yy_nxt[112] =
+static yyconst flex_uint16_t yy_nxt[139] =
     {   0,
         4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
-       14,   15,   16,   17,   18,   19,   20,   21,   22,   21,
-       23,   24,   21,   21,   21,   25,   21,   21,   21,   26,
-       21,   27,   28,   29,   32,   33,   38,   39,   40,   45,
-       59,   35,   69,   41,   46,   68,   60,   67,   66,   65,
-       64,   63,   62,   61,   58,   57,   56,   55,   54,   53,
-       52,   51,   50,   49,   48,   47,   30,   44,   43,   42,
-       37,   36,   34,   31,   30,   70,    3,   70,   70,   70,
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+       14,   15,   16,   17,   18,   19,   20,   21,   22,   23,
+       22,   24,   25,   22,   22,   22,   26,   22,   27,   22,
+       22,   28,   22,   29,   30,   31,   32,   33,   34,   33,
+       34,   35,   46,   36,   36,   38,   39,   44,   47,   45,
+       52,   35,   41,   36,   36,   79,   53,   55,   55,   35,
+       69,   36,   36,   55,   55,   78,   70,   54,   54,   77,
+       76,   75,   74,   73,   72,   71,   68,   67,   66,   65,
+       64,   63,   62,   61,   60,   59,   58,   57,   56,   35,
+       51,   50,   49,   48,   43,   42,   40,   37,   35,   80,
 
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       70
+        3,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+       80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+       80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+       80,   80,   80,   80,   80,   80,   80,   80
     } ;
 
-static yyconst flex_int16_t yy_chk[112] =
+static yyconst flex_int16_t yy_chk[139] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,   18,   18,   24,   24,   25,   29,
-       51,   71,   68,   25,   29,   65,   51,   63,   62,   58,
-       56,   55,   54,   52,   50,   48,   47,   46,   45,   44,
-       43,   42,   41,   39,   38,   36,   30,   28,   27,   26,
-       23,   22,   20,   16,   15,    3,   70,   70,   70,   70,
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+        1,    1,    1,    1,    1,    1,    1,   10,   10,   12,
+       12,   16,   26,   16,   16,   19,   19,   25,   26,   25,
+       31,   34,   81,   34,   34,   78,   31,   35,   35,   36,
+       61,   36,   36,   55,   55,   75,   61,   82,   82,   73,
+       72,   68,   66,   65,   64,   62,   59,   57,   56,   53,
+       52,   51,   50,   49,   48,   47,   45,   44,   42,   33,
+       30,   29,   28,   27,   24,   23,   21,   17,   15,    3,
 
-       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
-       70
+       80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+       80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+       80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+       80,   80,   80,   80,   80,   80,   80,   80
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -510,30 +520,36 @@ char *yytext;
 #line 1 "miniLang.lex"
 #line 2 "miniLang.lex"
 
+    #include "miniLang.tab.h"
+    #include <stdio.h>
+
     int crtAddress = 0;
     int crtToken = 0;
-    char sym[100][255];
-    int PIFTokenCode[1000]; 
-    int PIFAddress[1000];
+    char sym[1000][255];
+    char dbgSym[1000][255];
+    int PIFTokenCode[10000]; 
+    int PIFAddress[10000];
+    int lineCount = 1;
 
-    int findAddressOf(char *token){
+    int findAddressOf(const char *token){
         for (int i=0; i<crtAddress; i++)
             if (!strcmp(token, sym[i]))
                 return i;
         return -1;    
     }
 
-    void addSymbol(char *token){
+    void addSymbol(const char *token){
         strcpy(sym[crtAddress], token);
         crtAddress++;    
     }
     
-    void addToPif(int id, char *token){
-        if (id == 0 || id == 1){
+    void addToPif(int id, const char *token){
+        //printf("%s\n", token);
+        PIFTokenCode[crtToken] = id;
+        strcpy(dbgSym[crtToken], token);
+        if (id == IDENTIF || id == CONSTANT){
             int address = findAddressOf(token);  
-            PIFTokenCode[crtToken] = id; 
             if (address != -1){
-            	strcpy(sym[crtToken], token);
                 PIFAddress[crtToken++] = address;
             }
             else {
@@ -542,8 +558,7 @@ char *yytext;
             }
         }
         else{
-        	PIFAddress[crtToken] = -1;
-        	PIFTokenCode[crtToken++] = id;
+        	PIFAddress[crtToken++] = -1;
         }   
     }
 
@@ -551,13 +566,13 @@ char *yytext;
     	for (int i=0; i < crtToken; i++){
     		printf("%3d", PIFTokenCode[i]);
     		if (PIFAddress[i] != -1)
-    			printf(" - %3d [%-50s]\n", PIFAddress[i], sym[i]);
+    			printf(" - %3d [%s]\n", PIFAddress[i], dbgSym[i]);
     		else
-    			printf(" -   X\n");
+    			printf(" -   X [%s]\n", dbgSym[i]);
     	}
     }
 		
-#line 561 "lex.yy.c"
+#line 576 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -775,9 +790,9 @@ YY_DECL
 		}
 
 	{
-#line 56 "miniLang.lex"
+#line 61 "miniLang.lex"
 
-#line 781 "lex.yy.c"
+#line 796 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -804,13 +819,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 71 )
+				if ( yy_current_state >= 81 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 77 );
+		while ( yy_base[yy_current_state] != 101 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -836,176 +851,196 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 57 "miniLang.lex"
-{ addToPif(2,"+");    }
+#line 62 "miniLang.lex"
+{ addToPif(PLUS,"+");  return PLUS;  }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 58 "miniLang.lex"
-{ addToPif(3,"-");	}
+#line 63 "miniLang.lex"
+{ addToPif(MINUS,"-");	return MINUS;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 59 "miniLang.lex"
-{ addToPif(4,"*");	}
+#line 64 "miniLang.lex"
+{ addToPif(TIMES,"*");	return TIMES;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 60 "miniLang.lex"
-{ addToPif(5,"/");	}
+#line 65 "miniLang.lex"
+{ addToPif(SLASH,"/");	return SLASH;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 61 "miniLang.lex"
-{ addToPif(6,"(");	}
+#line 66 "miniLang.lex"
+{ addToPif(OBRACK,"(");	return OBRACK;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 62 "miniLang.lex"
-{ addToPif(7,")");	}
+#line 67 "miniLang.lex"
+{ addToPif(CBRACK,")");	return CBRACK;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 63 "miniLang.lex"
-{ addToPif(8,";");	}
+#line 68 "miniLang.lex"
+{ addToPif(SCOLON,";");	return SCOLON;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 64 "miniLang.lex"
-{ addToPif(9,",");	}
+#line 69 "miniLang.lex"
+{ addToPif(COMMA,",");	return COMMA;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 65 "miniLang.lex"
-{ addToPif(10,".");	}
+#line 70 "miniLang.lex"
+{ addToPif(DOT,".");	return DOT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 66 "miniLang.lex"
-{ addToPif(11,":=");	}
+#line 71 "miniLang.lex"
+{ addToPif(ASSIGN,":="); return ASSIGN;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 67 "miniLang.lex"
-{ addToPif(12,"=");	}
+#line 72 "miniLang.lex"
+{ addToPif(EQ,"=");	return EQ;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 68 "miniLang.lex"
-{ addToPif(13,"<>");	}
+#line 73 "miniLang.lex"
+{ addToPif(NEQ,"<>");	return NEQ;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 69 "miniLang.lex"
-{ addToPif(14,"<");	}
+#line 74 "miniLang.lex"
+{ addToPif(LT,"<");	return LT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 70 "miniLang.lex"
-{ addToPif(15,">");	}
+#line 75 "miniLang.lex"
+{ addToPif(GT,">");	return GT;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 71 "miniLang.lex"
-{ addToPif(16,"<=");	}
+#line 76 "miniLang.lex"
+{ addToPif(LEQ,"<=");	return LEQ;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 72 "miniLang.lex"
-{ addToPif(17,">=");	}
+#line 77 "miniLang.lex"
+{ addToPif(GEQ,">=");	return GEQ;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 73 "miniLang.lex"
-{ addToPif(18,":");	}
+#line 78 "miniLang.lex"
+{ addToPif(COLON,":");	return COLON;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 74 "miniLang.lex"
-{ addToPif(19,"BEGIN");   }
+#line 79 "miniLang.lex"
+{ addToPif(BBEGIN,"BEGIN");   return BBEGIN;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 75 "miniLang.lex"
-{ addToPif(20,"DO");      }
+#line 80 "miniLang.lex"
+{ addToPif(DO,"DO");      return DO;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 76 "miniLang.lex"
-{ addToPif(21,"END");     }
+#line 81 "miniLang.lex"
+{ addToPif(END,"END");     return END;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 77 "miniLang.lex"
-{ addToPif(22,"IF");      }
+#line 82 "miniLang.lex"
+{ addToPif(IF,"IF");      return IF;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 78 "miniLang.lex"
-{ addToPif(23, "ELSE");		}
+#line 83 "miniLang.lex"
+{ addToPif(ELSE, "ELSE");		return ELSE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 79 "miniLang.lex"
-{ addToPif(24,"THEN");    }
+#line 84 "miniLang.lex"
+{ addToPif(THEN,"THEN");    return THEN;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 80 "miniLang.lex"
-{ addToPif(25,"VAR");     }
+#line 85 "miniLang.lex"
+{ addToPif(VAR,"VAR");     return VAR;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 81 "miniLang.lex"
-{ addToPif(26, "WHILE");   }
+#line 86 "miniLang.lex"
+{ addToPif(WHILE, "WHILE");   return WHILE;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 82 "miniLang.lex"
-{ addToPif(27, "INTEGER");}
+#line 87 "miniLang.lex"
+{ addToPif(TYPEINT, "INTEGER"); return TYPEINT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 83 "miniLang.lex"
-{ addToPif(28, "REAL");	}
+#line 88 "miniLang.lex"
+{ addToPif(TYPEREAL, "REAL");	return TYPEREAL;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 84 "miniLang.lex"
-{ addToPif(29, "READ");	}
+#line 89 "miniLang.lex"
+{ addToPif(READ, "READ");	return READ;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 85 "miniLang.lex"
-{ addToPif(30, "WRITE");	}
+#line 90 "miniLang.lex"
+{ addToPif(WRITE, "WRITE");	return WRITE;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 86 "miniLang.lex"
-{ addToPif(0, yytext);}
+#line 91 "miniLang.lex"
+{ addToPif(MOD, "MOD"); return MOD;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 87 "miniLang.lex"
-{ addToPif(1, yytext);    }
+#line 92 "miniLang.lex"
+{ addToPif(IDENTIF, yytext); return IDENTIF;}
 	YY_BREAK
 case 32:
-/* rule 32 can match eol */
 YY_RULE_SETUP
-#line 88 "miniLang.lex"
-
+#line 93 "miniLang.lex"
+{ addToPif(IDENTIF, yytext); return IDENTIF;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 89 "miniLang.lex"
-{ printf("Unknown character [%c]",yytext[0]); return -1;  }
+#line 94 "miniLang.lex"
+{ addToPif(CONSTANT, yytext);    return CONSTANT;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 90 "miniLang.lex"
+#line 95 "miniLang.lex"
+{ addToPif(CONSTANT, yytext);    return CONSTANT;}
+	YY_BREAK
+case 35:
+YY_RULE_SETUP
+#line 96 "miniLang.lex"
+
+	YY_BREAK
+case 36:
+/* rule 36 can match eol */
+YY_RULE_SETUP
+#line 97 "miniLang.lex"
+{ lineCount++; }            
+	YY_BREAK
+case 37:
+YY_RULE_SETUP
+#line 98 "miniLang.lex"
+{ printf("Syntax error at line %d: [%c]",lineCount, yytext[0]); exit(1);}
+	YY_BREAK
+case 38:
+YY_RULE_SETUP
+#line 99 "miniLang.lex"
 ECHO;
 	YY_BREAK
-#line 1009 "lex.yy.c"
+#line 1044 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1298,7 +1333,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 71 )
+			if ( yy_current_state >= 81 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1326,11 +1361,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 71 )
+		if ( yy_current_state >= 81 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 70);
+	yy_is_jam = (yy_current_state == 80);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -2006,17 +2041,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 90 "miniLang.lex"
+#line 99 "miniLang.lex"
 
 
-
-int yywrap(void){
-	return 1;
-}
-
-int main()
-{
-	yylex();
-	printPIF();
-}
 

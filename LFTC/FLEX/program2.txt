@@ -6,13 +6,15 @@ VAR a, b, r: INTEGER;
 			WRITE(-1);
 		ELSE
 			IF b < 0 THEN
-				WRITE(-1);
+				WRITE(1);
 			ELSE
-				WHILE b <> 0 DO
-					BEGIN
-						r := a MOD b   ;
-						a := b;
-						b := r;
-					END;
-				WRITE(a);
+				BEGIN
+					WHILE b <> +0.123 DO
+						BEGIN
+							r := a MOD b;
+							a := b;
+							b := r;
+						END
+					WRITE(a);
+				END
 	END.

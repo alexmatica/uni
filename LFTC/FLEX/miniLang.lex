@@ -1,29 +1,35 @@
 %{
 
+    #include "miniLang.tab.h"
+    #include <stdio.h>
+
     int crtAddress = 0;
     int crtToken = 0;
-    char sym[100][255];
-    int PIFTokenCode[1000]; 
-    int PIFAddress[1000];
+    char sym[1000][255];
+    char dbgSym[1000][255];
+    int PIFTokenCode[10000]; 
+    int PIFAddress[10000];
+    int lineCount = 1;
 
-    int findAddressOf(char *token){
+    int findAddressOf(const char *token){
         for (int i=0; i<crtAddress; i++)
             if (!strcmp(token, sym[i]))
                 return i;
         return -1;    
     }
 
-    void addSymbol(char *token){
+    void addSymbol(const char *token){
         strcpy(sym[crtAddress], token);
         crtAddress++;    
     }
     
-    void addToPif(int id, char *token){
-        if (id == 0 || id == 1){
+    void addToPif(int id, const char *token){
+        //printf("%s\n", token);
+        PIFTokenCode[crtToken] = id;
+        strcpy(dbgSym[crtToken], token);
+        if (id == IDENTIF || id == CONSTANT){
             int address = findAddressOf(token);  
-            PIFTokenCode[crtToken] = id; 
             if (address != -1){
-            	strcpy(sym[crtToken], token);
                 PIFAddress[crtToken++] = address;
             }
             else {
@@ -32,8 +38,7 @@
             }
         }
         else{
-        	PIFAddress[crtToken] = -1;
-        	PIFTokenCode[crtToken++] = id;
+        	PIFAddress[crtToken++] = -1;
         }   
     }
 
@@ -41,60 +46,54 @@
     	for (int i=0; i < crtToken; i++){
     		printf("%3d", PIFTokenCode[i]);
     		if (PIFAddress[i] != -1)
-    			printf(" - %3d [%-50s]\n", PIFAddress[i], sym[i]);
+    			printf(" - %3d [%s]\n", PIFAddress[i], dbgSym[i]);
     		else
-    			printf(" -   X\n");
+    			printf(" -   X [%s]\n", dbgSym[i]);
     	}
     }
 		
 %}
 
-
+%option noyywrap
 digit         [0-9]
 letter        [a-zA-Z]
 
 %%
-"+"                  			{ addToPif(2,"+");    }
-"-"                  			{ addToPif(3,"-");	}
-"*"                  			{ addToPif(4,"*");	}
-"/"                  			{ addToPif(5,"/");	}
-"("                  			{ addToPif(6,"(");	}
-")"                  			{ addToPif(7,")");	}
-";"                  			{ addToPif(8,";");	}
-","                  			{ addToPif(9,",");	}
-"."                  			{ addToPif(10,".");	}
-":="                 			{ addToPif(11,":=");	}
-"="                  			{ addToPif(12,"=");	}
-"<>"                 			{ addToPif(13,"<>");	}
-"<"                  			{ addToPif(14,"<");	}
-">"                  			{ addToPif(15,">");	}
-"<="                 			{ addToPif(16,"<=");	}
-">="                 			{ addToPif(17,">=");	}
-":"					 			{ addToPif(18,":");	}
-"BEGIN"              			{ addToPif(19,"BEGIN");   }
-"DO"                 			{ addToPif(20,"DO");      }
-"END"                			{ addToPif(21,"END");     }
-"IF"                 			{ addToPif(22,"IF");      }
-"ELSE"							{ addToPif(23, "ELSE");		}
-"THEN"               			{ addToPif(24,"THEN");    }
-"VAR"                			{ addToPif(25,"VAR");     }
-"WHILE"              			{ addToPif(26, "WHILE");   }
-"INTEGER"						{ addToPif(27, "INTEGER");}
-"REAL"							{ addToPif(28, "REAL");	}
-"READ"							{ addToPif(29, "READ");	}
-"WRITE"							{ addToPif(30, "WRITE");	}
-{letter}({letter}|{digit})* 	{ addToPif(0, yytext);}
-{digit}+             			{ addToPif(1, yytext);    }
-[ \t\n\r]            
-.                    			{ printf("Unknown character [%c]",yytext[0]); return -1;  }
+"+"                  			{ addToPif(PLUS,"+");  return PLUS;  }
+"-"                  			{ addToPif(MINUS,"-");	return MINUS;}
+"*"                  			{ addToPif(TIMES,"*");	return TIMES;}
+"/"                  			{ addToPif(SLASH,"/");	return SLASH;}
+"("                  			{ addToPif(OBRACK,"(");	return OBRACK;}
+")"                  			{ addToPif(CBRACK,")");	return CBRACK;}
+";"                  			{ addToPif(SCOLON,";");	return SCOLON;}
+","                  			{ addToPif(COMMA,",");	return COMMA;}
+"."                  			{ addToPif(DOT,".");	return DOT;}
+":="                 			{ addToPif(ASSIGN,":="); return ASSIGN;}
+"="                  			{ addToPif(EQ,"=");	return EQ;}
+"<>"                 			{ addToPif(NEQ,"<>");	return NEQ;}
+"<"                  			{ addToPif(LT,"<");	return LT;}
+">"                  			{ addToPif(GT,">");	return GT;}
+"<="                 			{ addToPif(LEQ,"<=");	return LEQ;}
+">="                 			{ addToPif(GEQ,">=");	return GEQ;}
+":"					 			{ addToPif(COLON,":");	return COLON;}
+"BEGIN"              			{ addToPif(BBEGIN,"BEGIN");   return BBEGIN;}
+"DO"                 			{ addToPif(DO,"DO");      return DO;}
+"END"                			{ addToPif(END,"END");     return END;}
+"IF"                 			{ addToPif(IF,"IF");      return IF;}
+"ELSE"							{ addToPif(ELSE, "ELSE");		return ELSE;}
+"THEN"               			{ addToPif(THEN,"THEN");    return THEN;}
+"VAR"                			{ addToPif(VAR,"VAR");     return VAR;}
+"WHILE"              			{ addToPif(WHILE, "WHILE");   return WHILE;}
+"INTEGER"						{ addToPif(TYPEINT, "INTEGER"); return TYPEINT;}
+"REAL"							{ addToPif(TYPEREAL, "REAL");	return TYPEREAL;}
+"READ"							{ addToPif(READ, "READ");	return READ;}
+"WRITE"							{ addToPif(WRITE, "WRITE");	return WRITE;}
+"MOD"                           { addToPif(MOD, "MOD"); return MOD;}
+{letter}({letter}|{digit})* 	{ addToPif(IDENTIF, yytext); return IDENTIF;}
+"_"("_"|{letter}|{digit})+      { addToPif(IDENTIF, yytext); return IDENTIF;}
+(\+|\-)?"0"|(\+|\-)?[1-9]{digit}*    { addToPif(CONSTANT, yytext);    return CONSTANT;}
+(\+|\-)?("0"|[1-9]{digit}*)"."{digit}* { addToPif(CONSTANT, yytext);    return CONSTANT;}
+[ \t\r]
+[\n]                            { lineCount++; }            
+.                    			{ printf("Syntax error at line %d: [%c]",lineCount, yytext[0]); exit(1);}
 %%
-
-int yywrap(void){
-	return 1;
-}
-
-int main()
-{
-	yylex();
-	printPIF();
-}
