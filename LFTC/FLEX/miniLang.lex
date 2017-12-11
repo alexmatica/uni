@@ -95,5 +95,5 @@ letter        [a-zA-Z]
 (\+|\-)?("0"|[1-9]{digit}*)"."{digit}* { addToPif(CONSTANT, yytext);    return CONSTANT;}
 [ \t\r]
 [\n]                            { lineCount++; }            
-.                    			{ printf("Syntax error at line %d: [%c]",lineCount, yytext[0]); exit(1);}
+.                    			{ printf("Lexical error at line %d: [%c]",lineCount, yytext[0]); exit(1);}
 %%

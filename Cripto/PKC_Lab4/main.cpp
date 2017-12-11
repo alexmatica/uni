@@ -35,9 +35,10 @@ bool isPrime(int x){
     return true;
 }
 
-int Pollard(int *f, int degree, long long n, int x0, int tries){
+int Pollard(int *f, int degree, long long n, int x0, int tries, bool multipleFactors){
     int xlimit = x0 + tries;
     int limit = 1000000;
+    long long initN = n;
 
     auto *x = new long long[limit];
     int initialX = x0;
@@ -56,43 +57,47 @@ int Pollard(int *f, int degree, long long n, int x0, int tries){
 
             d = GCD(llabs(x[(j + 1)] - x[(j + 1) / 2]), n);
 
-//            std::cout << x[j] << " " << x[j+1] << " " << d << "\n";
             if (d == n) {
                 initialX ++;
                 break;
             }
 
             if (d != 1) {
-                std::cout << "Found a factor of n: " << d << "\n";
+                std::cout << "[!]Found a factor of n: " << d << "\n";
                 n /= d;
                 initialX = x0;
                 break;
             }
         }
 
-        if (n == 1) {
+        if (n == 1 || !multipleFactors) {
             break;
         }
     }
 
     auto end = Clock::now();
 
-    if (n == 1 || (isPrime(d) && n/d == 1))
-        std::cout << "Found a factor of n: " << d <<"\n";
-    else
-        std::cout << "FAILURE!";
+    if (multipleFactors) {
+        if (n == initN)
+            std::cout << "FAILURE!\n";
+        else if (n == 1 || (isPrime(d) && n / d == 1))
+            std::cout << "Found a factor of n: " << d << "\n";
+    } else{
+        if (initN == n)
+            std::cout << "FAILURE!\n";
+    }
 
     std::cout << "Time: ";
-    std::cout << (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count() << " ms" << '\n';
+    std::cout << (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count() << " ms" << '\n';
     delete(x);
 }
 
-void Trivial(long long n){
+void Trivial(long long n, bool multipleFactors){
     int factors = 0;
 
     long long x = 3;
 
-    std::cout << "\n\nTrivial: \n";
+    std::cout << "\nTrivial: \n";
     auto start = Clock::now();
 
     while (n != 1){
@@ -104,6 +109,8 @@ void Trivial(long long n){
         if (p != 0){
             std::cout << "Found a factor of n: " << x << "^" << p << "\n";
             factors ++;
+            if (!multipleFactors)
+                break;
         }
         x += 2;
         if (x == n && factors == 0)
@@ -114,7 +121,7 @@ void Trivial(long long n){
     if (factors == 0)
         std::cout << "Failure!\n";
     std::cout << "Time: ";
-    std::cout << (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count() << " ms" << '\n';
+    std::cout << (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count() << " ms" << '\n';
 
 }
 
@@ -186,8 +193,14 @@ int main(int argc, char **argv) {
 //    for (int i=0; i <= degree; i++)
 //        std::cout << f[i] << " ";
 //    std::cout << "\n";
-    Pollard(f, degree, n, x0, tries);
-    Trivial(n);
+
+    std::cout << "Trying for one factor...\n";
+    Pollard(f, degree, n, x0, tries, false);
+    Trivial(n, false);
+
+//    std::cout << "\n\n\nTrying for all factors...\n";
+//    Pollard(f, degree, n, x0, tries, true);
+//    Trivial(n, true);
 
     return 0;
 }

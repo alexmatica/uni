@@ -34,6 +34,7 @@ def prefix_sum(depth):
 
     size = 2 ** depth
     arr = [random.randint(0,9) for _ in xrange(size)]
+    print arr
     # print arr
 
     # on bottoms-up step, leaves level is counted as 0
@@ -79,10 +80,10 @@ def prefix_sum(depth):
         start_width *= 2
         level += 1
     #
-    # for i in range(1, len(dummy_tree[-1])):
-    #     print dummy_tree[-1][i].fl,
-    # print dummy_tree[-1][-1].fl + dummy_tree[-1][-1].sum
-
+    for i in range(1, len(dummy_tree[-1])):
+        print dummy_tree[-1][i].fl,
+    print dummy_tree[-1][-1].fl + dummy_tree[-1][-1].sum
+    print 'Array size: ', size
     print 'Additions: ', totalAdditions
 
 
