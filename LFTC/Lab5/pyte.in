@@ -1,0 +1,17 @@
+program: WITH type_declaration_list DCOLON NEWLINE stmt_list
+type_declaration_list: type_declaration | type_declaration COMMA type_declaration_list
+type_declaration: IDENTIFIER AS type
+type: TINT | TFLOAT | TSTRING
+stmt_list: stmt | stmt NEWLINE stmt_list
+stmt: assignStmt | ifStmt | whileStmt | readStmt | writeStmt
+assignStmt: IDENTIFIER ASSIGN expression
+ifStmt: IF condition SCOLON NEWLINE stmt_list
+whileStmt: WHILE condition DCOLON NEWLINE stmt_list
+readStmt: READ IDENTIFIER
+writeStmt: WRITE IDENTIFIER
+expression: lhs | lhs operator rhs
+lhs: IDENTIFIER | CONSTANT
+operator: PLUS | MINUS | TIMES | DIV | MOD | POW
+rhs: IDENTIFIER | CONSTANT | expression
+condition: lhs | lhs conditioner lhs
+conditioner: EQUAL | NOTEQUAL | LT | GT | LE | GE
