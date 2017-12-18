@@ -17,9 +17,8 @@ class Rule:
 
 
 class CFG:
-    def __init__(self, file_name):
+    def __init__(self):
         self.rules = []
-        # self.init_from_file(file_name)
 
     def init_from_file(self, file_name):
         with open(file_name, 'r') as f:
@@ -78,16 +77,32 @@ class State(Enum):
 
 class Automaton:
     def __init__(self, file_name, for_program=False):
-        self.c = CFG(file_name)
+        self.c = CFG()
         if not for_program:
             self.c.init_from_file(file_name)
         else:
             self.c.init_from_file_for_program(file_name)
+
+        if not self.check_cfg():
+            print 'There is no rule which starts with a terminal! Cannot apply RDP!'
+            sys.exit(0)
+
         self.state = State.normal
         self.position = 1
         self.work_stack = []
         self.input_stack = []
         self.input_stack = [self.c.rules[0].name]
+        print 'State: {0}\n\tPosition={1}\n\tWork stack: {2}\n\tInput stack: {3}\n\n'.format(
+            self.state, self.position, self.work_stack, self.input_stack
+        )
+
+    def check_cfg(self):
+        all_rules = [rule.name for rule in self.c.rules]
+        for rule in self.c.rules:
+            for path in rule.paths:
+                if path[0] not in all_rules:
+                    return True
+        return False
 
     def parse(self, sequence):
         if len(self.input_stack) == 0:
@@ -102,6 +117,7 @@ class Automaton:
         if len(self.input_stack) > 0:
             idx = self.c.rule_exists(self.input_stack[0])
             if idx != -1:
+                print '\t->Expand'
                 self.state = State.normal
                 for i in range(len(self.c.rules[idx].paths)):
                     work_stack_copy = deepcopy(self.work_stack)
@@ -112,15 +128,17 @@ class Automaton:
                     self.input_stack = self.c.rules[idx].paths[i] + self.input_stack
 
                     if self.state != State.end:
-                        print self.state, self.position, self.work_stack, self.input_stack, sequence
+                        print 'State: {0}\n\tPosition={1}\n\tWork stack: {2}\n\tInput stack: {3}\n\n'.format(
+                            self.state, self.position, self.work_stack, self.input_stack
+                        )
                     self.parse(sequence)
                     if self.state == State.end:
                         return
                     self.work_stack = deepcopy(work_stack_copy)
                     self.input_stack = deepcopy(input_stack_copy)
             else:
-                # print 'Sunt pe else ---- ', self.input_stack, sequence[self.position - 1]
                 if self.input_stack[0] == sequence[self.position - 1]:
+                    print '\t->Advance'
                     self.state = State.normal
                     self.position += 1
                     self.work_stack.append(self.input_stack[0])
@@ -128,7 +146,9 @@ class Automaton:
                     self.input_stack.pop(0)
 
                     if self.state != State.end:
-                        print self.state, self.position, self.work_stack, self.input_stack, sequence
+                        print 'State: {0}\n\tPosition={1}\n\tWork stack: {2}\n\tInput stack: {3}\n\n'.format(
+                            self.state, self.position, self.work_stack, self.input_stack
+                        )
                     self.parse(sequence)
                     if self.state == State.end:
                         return
@@ -136,6 +156,7 @@ class Automaton:
                     self.work_stack.pop(len(self.work_stack) - 1)
                     self.input_stack = save + self.input_stack
                 else:
+                    print '\t->Local failure (& go back, another try)'
                     self.state = State.back
 
 
@@ -157,10 +178,11 @@ def pif_to_cfg_sequence(codes, file_name):
 
 
 if __name__ == '__main__':
-    a = Automaton('cfg.in', False)
-    # seq = pif_to_cfg_sequence(init_codes('pyte_codes.in'), 'pif.in')
+    # a = Automaton('cfg.in', False)
+    a = Automaton('pyte.in', True)
+    seq = pif_to_cfg_sequence(init_codes('pyte_codes.in'), 'pif.in')
     # print seq
-    a.parse('++aa-aa')
+    a.parse(seq)
     if a.state == State.end:
         print 'SUCCESS!'
     else:
