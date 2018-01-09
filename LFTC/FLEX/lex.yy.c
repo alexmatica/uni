@@ -525,11 +525,32 @@ char *yytext;
 
     int crtAddress = 0;
     int crtToken = 0;
+    int identifCount = 0;
+    char identifs[1000][255];
     char sym[1000][255];
     char dbgSym[1000][255];
     int PIFTokenCode[10000]; 
     int PIFAddress[10000];
     int lineCount = 1;
+    FILE *asm_source;
+
+    int ifCounter = 0;
+    int ifQueue[20];
+    int ifIndex = 0;
+
+    int whileCounter = 0;
+    int whileQueue[20];
+    int whileIndex = 0;
+    
+    int beginQueue[20];
+    int beginCount = 0;
+
+    int isIdentifier(char *token){
+        for (int i=0; i<identifCount; i++)
+            if(!strcmp(token, identifs[i]))
+                return 1;
+        return 0;
+    }
 
     int findAddressOf(const char *token){
         for (int i=0; i<crtAddress; i++)
@@ -538,9 +559,13 @@ char *yytext;
         return -1;    
     }
 
-    void addSymbol(const char *token){
+    void addSymbol(const char *token, int code){
         strcpy(sym[crtAddress], token);
-        crtAddress++;    
+        crtAddress++;  
+        
+        if (code == IDENTIF){
+            strcpy(identifs[identifCount++], token);
+        }
     }
     
     void addToPif(int id, const char *token){
@@ -553,7 +578,7 @@ char *yytext;
                 PIFAddress[crtToken++] = address;
             }
             else {
-                addSymbol(token);
+                addSymbol(token, id);
                 PIFAddress[crtToken++] = crtAddress-1;
             }
         }
@@ -561,6 +586,8 @@ char *yytext;
         	PIFAddress[crtToken++] = -1;
         }   
     }
+    
+    void translate();
 
     void printPIF(){
     	for (int i=0; i < crtToken; i++){
@@ -570,9 +597,276 @@ char *yytext;
     		else
     			printf(" -   X [%s]\n", dbgSym[i]);
     	}
+    	translate();
     }
+    
+    void push_regs(){
+        fprintf(asm_source, "\n\tpush rdi\n\tpush rsi\n\tpush rbp\n");
+    }
+
+    void pop_regs(){
+        fprintf(asm_source, "\tpop rbp\n\tpop rsi\n\tpop rdi\n\n");
+    }
+
+    void do_scanf(char *memLocation){
+        push_regs();
+        fprintf(asm_source,"\tmov rsi, %s\n", memLocation);
+        fprintf(asm_source,"\tmov rdi, format\n");
+        fprintf(asm_source,"\tcall scanf\n");
+        pop_regs();
+    }
+
+    void do_printf(){
+        push_regs();
+        fprintf(asm_source, "\tmov rsi, rax\n");
+        fprintf(asm_source, "\tmov rdi, format\n");
+        fprintf(asm_source, "\tcall printf\n");
+        pop_regs();
+    }
+
+    void dereferenceOrNot(const char* reg, char *token){
+        if (isIdentifier(token))
+            fprintf(asm_source, "\tmov %s, [%s]\n", reg, token);
+        else
+            fprintf(asm_source, "\tmov %s, %s\n", reg, token);        
+    }
+
+
+    //  final result is saved in EAX
+    void translate_expression(int count){
+        dereferenceOrNot("rax", dbgSym[count]);
+        dereferenceOrNot("rbx", dbgSym[count+2]);
+
+        switch(PIFTokenCode[count+1]){
+            case PLUS:
+                fprintf(asm_source, "\tadd rax, rbx\n");
+                break;
+            case MINUS:
+                fprintf(asm_source, "\tsub rax, rbx\n");
+                break;
+            case TIMES:
+                fprintf(asm_source, "\tmov rdx, 0\n");
+                fprintf(asm_source, "\timul rax, rbx\n");
+                break;
+            case SLASH:
+                fprintf(asm_source, "\tmov rdx, 0\n");
+                fprintf(asm_source, "\tdiv rbx\n");
+                break;
+            case MOD:
+                fprintf(asm_source, "\tmov rdx, 0\n");
+                fprintf(asm_source, "\tdiv rbx\n");
+                fprintf(asm_source, "\tmov rax, rdx\n");
+                break;
+        }
+    }
+
+    void translate_compare(int count){
+        fprintf(asm_source, "\tcmp rcx, rax\n");
+        switch(PIFTokenCode[count]){
+            case EQ:
+                fprintf(asm_source, "\tjne else_branch%d\n", ifCounter);
+                break;
+            case NEQ:
+                fprintf(asm_source, "\tje else_branch%d\n", ifCounter);
+                break;
+            case LT:
+                fprintf(asm_source, "\tjge else_branch%d\n", ifCounter);
+                break;
+            case GT:
+                fprintf(asm_source, "\tjle else_branch%d\n", ifCounter);
+                break;
+            case LEQ:
+                fprintf(asm_source, "\tjg else_branch%d\n", ifCounter);
+                break;
+            case GEQ:
+                fprintf(asm_source, "\tjl else_branch%d\n", ifCounter);
+                break;
+        }
+    }
+
+    void translate_compare_while(int count){
+        fprintf(asm_source, "\tcmp rcx, rax\n");
+        switch(PIFTokenCode[count]){
+            case EQ:
+                fprintf(asm_source, "\tjne while_end%d\n", whileCounter);
+                break;
+            case NEQ:
+                fprintf(asm_source, "\tje while_end%d\n", whileCounter);
+                break;
+            case LT:
+                fprintf(asm_source, "\tjge while_end%d\n", whileCounter);
+                break;
+            case GT:
+                fprintf(asm_source, "\tjle while_end%d\n", whileCounter);
+                break;
+            case LEQ:
+                fprintf(asm_source, "\tjg while_end%d\n", whileCounter);
+                break;
+            case GEQ:
+                fprintf(asm_source, "\tjl while_end%d\n", whileCounter);
+                break;
+        }
+    }
+
+    void translate(){
+        asm_source = fopen("source.asm","w");
+        
+        fprintf(asm_source, "global main\nextern scanf\nextern printf\nextern exit\n\n");
+        fprintf(asm_source, "SECTION .data\n");
+        fprintf(asm_source, "\tformat db \"%s\", 0\n", "\%ld");
+        
+        for(int i=0; i<identifCount; i++)
+            fprintf(asm_source, "\t%s dq 0h\n", identifs[i]);
+            
+        fprintf(asm_source, "\n\nSECTION .text\nmain:\n");
+        
+        //  variable declarations have been taken care of; move to the actual code
+        int count = 0;
+
+        while (PIFTokenCode[count] != BBEGIN)
+            count ++;
+            
+        int aux;
+        for (count; count < crtToken;){
+            switch (PIFTokenCode[count]){
+                case READ:
+                    do_scanf(dbgSym[count+2]);
+                    count += 5;
+                    fprintf(asm_source, "\n");
+                    break;
+               case WRITE:
+                    // count + 1 = (
+                    // count + 2 = identif / const
+                    // count + 3 = ) / matemathical operator
+                    // count + 4 = ; / identif / const
+                    if (PIFTokenCode[count + 3] != CBRACK){
+                        translate_expression(count+2);
+                        count += 7;
+                    }
+                    else{
+                        dereferenceOrNot("rax", dbgSym[count+2]);
+                        count += 5;
+                    }
+                    do_printf();
+                    break;
+                case IF:
+                    aux = PIFTokenCode[count+2];
+
+                    //if the third deal is not a comparator, then we have an expression before the comparator
+                    if (aux != LT && aux != GT && aux != EQ && aux != NEQ && aux != LEQ && aux != GEQ){
+                        translate_expression(count + 1);
+                        fprintf(asm_source, "\tmov rcx, rax\n");
+                        count += 4;
+                    }
+                    else {
+                        dereferenceOrNot("rcx", dbgSym[count+1]);
+                        count += 2;
+                    }
+
+                    // save comparator position
+                    aux = count;
+
+                    // if the last deal is not THEN, we have an expression after the comparator
+                    if (PIFTokenCode[count+2] != THEN){
+                        translate_expression(count+1);
+                        count += 5;
+                    }
+                    else {
+                        dereferenceOrNot("rax", dbgSym[count+1]);
+                        count += 3;
+                    }
+
+                    translate_compare(aux);
+                    fprintf(asm_source, "\n");
+
+                    beginQueue[beginCount++] = IF;
+                    ifQueue[ifIndex++] = ifCounter++;
+
+                    break;
+                case ELSE:
+                    fprintf(asm_source, "else_branch%d:\n", ifQueue[ifIndex-1]);
+                    beginQueue[beginCount++] = ELSE; 
+
+                    count++;
+                    break;
+                case END:
+                    aux = beginQueue[beginCount-1];
+                    beginCount--;
+
+                    if (aux == IF){
+                        if (PIFTokenCode[count + 1] == ELSE){
+                            fprintf(asm_source, "\tjmp after_else%d\n", ifQueue[ifIndex-1]);
+                        }
+                        else{
+                            ifIndex--;
+                        }
+                    } else if (aux == ELSE){
+                        fprintf(asm_source, "after_else%d:\n\n", ifQueue[ifIndex-1]);
+                        ifIndex--;
+                    } else if (aux == WHILE){
+                        fprintf(asm_source, "jmp before_while%d\n", whileQueue[whileIndex-1]);
+                        fprintf(asm_source, "while_end%d:\n\n", whileQueue[whileIndex-1]);
+                        whileIndex--;
+                    }
+                    count++;
+                    break;
+                case BBEGIN:
+                    count ++;
+                    break;
+                case ASSIGN:
+                    aux = count - 1;
+                    if (PIFTokenCode[count+2] != SCOLON){
+                        translate_expression(count+1);
+                        count += 5;
+                    } else{
+                        dereferenceOrNot("rax", dbgSym[count+1]);
+                        count += 3;
+                    }
+                    fprintf(asm_source, "\tmov [%s], rax\n", dbgSym[aux]);
+                    break;
+                case WHILE:
+                    fprintf(asm_source, "before_while%d:\n", whileCounter);
+
+                    aux = PIFTokenCode[count+2];
+
+                    if (aux != LT && aux != GT && aux != EQ && aux != NEQ && aux != LEQ && aux != GEQ){
+                        translate_expression(count + 1);
+                        fprintf(asm_source, "\tmov rcx, rax\n");
+                        count += 4;
+                    }
+                    else {
+                        dereferenceOrNot("rcx", dbgSym[count+1]);
+                        count += 2;
+                    }
+
+                    aux = count;
+                    if (PIFTokenCode[count+2] != DO){
+                        translate_expression(count+1);
+                        count += 5;
+                    }
+                    else {
+                        dereferenceOrNot("rax", dbgSym[count+1]);
+                        count += 3;
+                    }
+
+                    translate_compare_while(aux);
+                    fprintf(asm_source, "\n");
+
+                    beginQueue[beginCount++] = WHILE;
+                    whileQueue[whileIndex++] = whileCounter++;
+
+                    break;
+                default:
+                    count ++;
+                    break;
+            }
+        }
+        
+        fprintf(asm_source, "push 0\ncall exit\n"); 
+        fclose(asm_source);
+    }	
 		
-#line 576 "lex.yy.c"
+#line 870 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -790,9 +1084,9 @@ YY_DECL
 		}
 
 	{
-#line 61 "miniLang.lex"
+#line 355 "miniLang.lex"
 
-#line 796 "lex.yy.c"
+#line 1090 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -851,196 +1145,196 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 62 "miniLang.lex"
+#line 356 "miniLang.lex"
 { addToPif(PLUS,"+");  return PLUS;  }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 63 "miniLang.lex"
+#line 357 "miniLang.lex"
 { addToPif(MINUS,"-");	return MINUS;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 64 "miniLang.lex"
+#line 358 "miniLang.lex"
 { addToPif(TIMES,"*");	return TIMES;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 65 "miniLang.lex"
+#line 359 "miniLang.lex"
 { addToPif(SLASH,"/");	return SLASH;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 66 "miniLang.lex"
+#line 360 "miniLang.lex"
 { addToPif(OBRACK,"(");	return OBRACK;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 67 "miniLang.lex"
+#line 361 "miniLang.lex"
 { addToPif(CBRACK,")");	return CBRACK;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 68 "miniLang.lex"
+#line 362 "miniLang.lex"
 { addToPif(SCOLON,";");	return SCOLON;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 69 "miniLang.lex"
+#line 363 "miniLang.lex"
 { addToPif(COMMA,",");	return COMMA;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 70 "miniLang.lex"
+#line 364 "miniLang.lex"
 { addToPif(DOT,".");	return DOT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 71 "miniLang.lex"
+#line 365 "miniLang.lex"
 { addToPif(ASSIGN,":="); return ASSIGN;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 72 "miniLang.lex"
+#line 366 "miniLang.lex"
 { addToPif(EQ,"=");	return EQ;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 73 "miniLang.lex"
+#line 367 "miniLang.lex"
 { addToPif(NEQ,"<>");	return NEQ;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 74 "miniLang.lex"
+#line 368 "miniLang.lex"
 { addToPif(LT,"<");	return LT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 75 "miniLang.lex"
+#line 369 "miniLang.lex"
 { addToPif(GT,">");	return GT;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 76 "miniLang.lex"
+#line 370 "miniLang.lex"
 { addToPif(LEQ,"<=");	return LEQ;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 77 "miniLang.lex"
+#line 371 "miniLang.lex"
 { addToPif(GEQ,">=");	return GEQ;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 78 "miniLang.lex"
+#line 372 "miniLang.lex"
 { addToPif(COLON,":");	return COLON;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 79 "miniLang.lex"
+#line 373 "miniLang.lex"
 { addToPif(BBEGIN,"BEGIN");   return BBEGIN;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 80 "miniLang.lex"
+#line 374 "miniLang.lex"
 { addToPif(DO,"DO");      return DO;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 81 "miniLang.lex"
+#line 375 "miniLang.lex"
 { addToPif(END,"END");     return END;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 82 "miniLang.lex"
+#line 376 "miniLang.lex"
 { addToPif(IF,"IF");      return IF;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 83 "miniLang.lex"
+#line 377 "miniLang.lex"
 { addToPif(ELSE, "ELSE");		return ELSE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 84 "miniLang.lex"
+#line 378 "miniLang.lex"
 { addToPif(THEN,"THEN");    return THEN;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 85 "miniLang.lex"
+#line 379 "miniLang.lex"
 { addToPif(VAR,"VAR");     return VAR;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 86 "miniLang.lex"
+#line 380 "miniLang.lex"
 { addToPif(WHILE, "WHILE");   return WHILE;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 87 "miniLang.lex"
+#line 381 "miniLang.lex"
 { addToPif(TYPEINT, "INTEGER"); return TYPEINT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 88 "miniLang.lex"
+#line 382 "miniLang.lex"
 { addToPif(TYPEREAL, "REAL");	return TYPEREAL;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 89 "miniLang.lex"
+#line 383 "miniLang.lex"
 { addToPif(READ, "READ");	return READ;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 90 "miniLang.lex"
+#line 384 "miniLang.lex"
 { addToPif(WRITE, "WRITE");	return WRITE;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 91 "miniLang.lex"
+#line 385 "miniLang.lex"
 { addToPif(MOD, "MOD"); return MOD;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 92 "miniLang.lex"
+#line 386 "miniLang.lex"
 { addToPif(IDENTIF, yytext); return IDENTIF;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 93 "miniLang.lex"
+#line 387 "miniLang.lex"
 { addToPif(IDENTIF, yytext); return IDENTIF;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 94 "miniLang.lex"
+#line 388 "miniLang.lex"
 { addToPif(CONSTANT, yytext);    return CONSTANT;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 95 "miniLang.lex"
+#line 389 "miniLang.lex"
 { addToPif(CONSTANT, yytext);    return CONSTANT;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 96 "miniLang.lex"
+#line 390 "miniLang.lex"
 
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 97 "miniLang.lex"
+#line 391 "miniLang.lex"
 { lineCount++; }            
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 98 "miniLang.lex"
-{ printf("Syntax error at line %d: [%c]",lineCount, yytext[0]); exit(1);}
+#line 392 "miniLang.lex"
+{ printf("Lexical error at line %d: [%c]",lineCount, yytext[0]); exit(1);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 99 "miniLang.lex"
+#line 393 "miniLang.lex"
 ECHO;
 	YY_BREAK
-#line 1044 "lex.yy.c"
+#line 1338 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2041,7 +2335,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 99 "miniLang.lex"
+#line 393 "miniLang.lex"
 
 
 

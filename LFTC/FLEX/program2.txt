@@ -1,20 +1,26 @@
 VAR a, b, r: INTEGER;
 	BEGIN
-		READ(a2);
-		READ(b3);
-		IF a < 0 THEN
-			WRITE(-1);
+		READ(a);
+		READ(b);
+		IF a = 0 THEN
+			BEGIN
+				WRITE(b);
+			END
 		ELSE
-			IF b < 0 THEN
-				WRITE(1);
-			ELSE
-				BEGIN
-					WHILE b <> +0.123 DO
-						BEGIN
-							r := a MOD b;
-							a := b;
-							b := r;
-						END
-					WRITE(a);
-				END
+			BEGIN
+				IF b = 0 THEN
+					BEGIN
+						WRITE(a);
+					END
+				ELSE
+					BEGIN
+						WHILE b <> 0 DO
+							BEGIN
+								r := a MOD b;
+								a := b;
+								b := r;
+							END
+						WRITE(a);
+					END
+			END
 	END.

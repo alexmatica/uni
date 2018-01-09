@@ -63,13 +63,14 @@ operator: PLUS | MINUS | TIMES | SLASH | MOD;
 
 iostmt: READ OBRACK IDENTIF CBRACK SCOLON
 		| WRITE OBRACK IDENTIF CBRACK SCOLON 
-		| WRITE OBRACK CONSTANT CBRACK SCOLON;
+		| WRITE OBRACK CONSTANT CBRACK SCOLON
+		| WRITE OBRACK expr CBRACK SCOLON;
 
-ifstmt: IF condition THEN stmt ELSE stmt;
+ifstmt: IF condition THEN compoundstmt ELSE compoundstmt;
 condition: expr relation expr;
 relation: EQ | NEQ | LEQ | GEQ | LT | GT;
 
-whilestmt: WHILE condition DO stmt;
+whilestmt: WHILE condition DO compoundstmt;
 
 %%
 
